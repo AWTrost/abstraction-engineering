@@ -1,0 +1,30 @@
+{
+  "name": "@agent-class/release-review",
+  "version": "0.2.0",
+  "description": "An agent-class that reports planned-vs-shipped gaps for a release. Read only.",
+  "type": "module",
+  "bin": {
+    "release-review": "bin/release-review.js"
+  },
+  "exports": {
+    ".": "./lib/review.js",
+    "./class.json": "./class.json"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "class.json",
+    "prompts",
+    "conformance",
+    "skill",
+    "setup.example.json",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test \"test/*.test.js\""
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "private": true
+}
