@@ -225,7 +225,7 @@ Beyond the ground truth, the class found one real new gap on each release, and t
 
 On human effort, release B is the fair point. The session took 3 typed messages and 81 words to reach its first hand-off list. The class takes one command and a sign-off. Release A's count measures mostly code review and skill building, so it is not comparable.
 
-The comparison states its own caveats, and all of them stand:
+Caveats on the scored comparison:
 - **Release A as briefed failed.** The re-run is a diagnostic. Its window is wider than A's branch, so its counts are not purely A's.
 - **The tracker has drifted.** The class raised eleven gaps for a ticket in an unexpected state across both releases. Every one fired because the ticket moved after the sessions. No status row shows what the class would have said on the day.
 - **The session costs are upper bounds.** Those sessions also reviewed code, wrote to the tracker and ran the deploy.
@@ -233,6 +233,26 @@ The comparison states its own caveats, and all of them stand:
 - **The ground truth may not be blind.** A class run on an overlapping window wrote its report four minutes before the ground truth was committed. Git cannot show whether its author read it.
 - **The same model family built the class and scored it.** The first scoring counted 4 hits on A and 6 on B. A review downgraded six rows, and the table above is the second round.
 - **The numbers are small.** Seven findings per release, two releases.
+
+**Token use, release B.** The session's dollar cost includes unrelated work, so I counted tokens in its transcript up to the first message naming the tickets to hand to testing. That list is the session's answer to the step the class does, though it gives no verdict per ticket. This is a direction from one release, not a ratio: the class's calls were recorded in dollars, not tokens, and the session ran on a larger model than the class.
+
+| | Hand-run session, to the hand-off list | Hand-run session, whole | Class, run from a shell |
+|---|---|---|---|
+| Model calls | 19 | 178 | 8, worked out from the report: one per ticket both planned and shipped |
+| Tokens | 1.34 million | 29.8 million | not recorded |
+| Share read from the prompt cache | 94% | 99% | not recorded |
+| Output tokens | 8,762 | 111,919 | not recorded |
+| Cost | under $10.26 | $10.26 | $0.14 |
+
+The session's cost up to the hand-off list is not known exactly, because the token meter reads each session's total and keeps no price table.
+
+The two costs have different shapes:
+- **The session.** Each call re-read the conversation so far, about 71,000 tokens a call up to the hand-off list, nearly all from the cache. The conversation held the agent's setup, the skill's text and every tracker and git result.
+- **The class.** Each call starts with the user's setup stripped and sees only the prompt, one ticket and its changes. The tracker and git work is code, so it costs no tokens.
+
+So an agent's cost should grow with its turns, each costing more as the context fills, while the class's grows with the number of tickets. One release cannot show the growth itself.
+
+The class column is the class run from a shell. Run by an agent through its skill, the class costs more, about three times as much on the one release where both were run (below).
 
 **The fuzzy function, scored.** The conformance set has 16 ticket and change pairs with known verdicts. A model passes at 80% correct. It also fails on any hard miss: a `partial` or `unrelated` case answered `matches`, because that error hides a gap, while the others only add noise. The 80% bar is a placeholder. A small model scored 16 of 16 for about a cent. A mid-size model scored 15 of 16, and its one miss was soft. The same agent wrote the cases and the prompt, so I reviewed the cases and decided the borderline ones myself. They are still not held out.
 
@@ -247,7 +267,7 @@ The comparison states its own caveats, and all of them stand:
 - **Three live runs** on one team's past releases, at up to $0.14 each in model calls.
 - **A scored comparison** against two long hand-run sessions, with the results and caveats above.
 - **Conformance scores** on two models.
-- **An agent can run it from the contract alone.** A fresh coding-agent session, in a scratch project with the package installed by tag, was told to use the agent-class to review a release. It loaded the class's skill, ran it with only the two declared inputs, a setup file and a release id, read the report and asked for sign-off. That took 5 turns and cost $0.19.
+- **An agent can run it from the contract alone.** A fresh coding-agent session, in a scratch project with the package installed by tag, was told to use the agent-class to review a release. It loaded the class's skill, ran it with only the two declared inputs, a setup file and a release id, read the report and asked for sign-off. That was a fourth live run, of release A's corrected window with the real setup. It took 5 turns and cost $0.19 for the agent, on top of $0.07 for the class's own model calls. The same review run from a shell cost $0.08, so the agent route cost about three times as much. Most of the agent's share was context: its first turn wrote 39,000 tokens of setup to the prompt cache, and later turns re-read them.
 - **Pinning by tag**, and refusal of a setup pinned to another version.
 - **The proofreader's closure binding**, merged and in use.
 - **Fixed commands for repeated one-offs.** My agents kept editing task notes with hand-written scripts, which broke twice in one night on apostrophes. Two small fixed commands replaced them, and a full day of use followed without a failure.
@@ -266,7 +286,7 @@ The comparison states its own caveats, and all of them stand:
 
 **It supports:**
 
-- **The exact/fuzzy split holds.** Almost all of the work was code, and the one judgement cost cents per release. The hand-run sessions cost $10 and $58, but those are upper bounds that include other work, so the comparison is not like for like.
+- **The exact/fuzzy split holds.** Almost all of the work was code, and the one judgement cost cents per release. The hand-run sessions cost $10 and $58, but those are upper bounds that include other work, so the comparison is not like for like. Counted only up to the hand-off list, release B's session still made 19 model calls and used 1.34 million tokens, against 8 calls and $0.14 for the class.
 - **The class/setup split holds at the smallest scale.** A fixture setup and one real setup bound the class with no change to its code. A fixture is a test double, not a second team. A fresh agent ran the class knowing only the contract.
 - **The contract is the class, not the code.** Two implementations in two languages gave the same report on a real release, with the fuzzy function held constant.
 - **Pinning is cheap once a class is a package.** npm and a lockfile already do it.
