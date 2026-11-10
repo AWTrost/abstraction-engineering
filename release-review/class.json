@@ -1,0 +1,144 @@
+{
+  "name": "release-review",
+  "version": "0.2.0",
+  "states": ["todo", "in_progress", "awaiting_qa", "in_qa", "done"],
+  "$defs": {
+    "Ticket": {
+      "description": "One ticket from the tracker. Extra keys are allowed and ignored.",
+      "type": "object",
+      "required": ["key", "summary", "description", "status", "fix_versions", "url"],
+      "properties": {
+        "key": {"type": "string"},
+        "summary": {"type": ["string", "null"]},
+        "description": {"type": ["string", "null"]},
+        "status": {"type": "string"},
+        "fix_versions": {"type": "array", "items": {"type": "string"}},
+        "url": {"type": ["string", "null"]}
+      }
+    },
+    "Change": {
+      "description": "One merge request or commit in the release. Extra keys are allowed and ignored.",
+      "type": "object",
+      "required": ["id", "kind", "title", "description", "url", "ticket_keys"],
+      "properties": {
+        "id": {"type": "string"},
+        "kind": {"enum": ["mr", "commit"]},
+        "title": {"type": ["string", "null"]},
+        "description": {"type": ["string", "null"]},
+        "url": {"type": ["string", "null"]},
+        "ticket_keys": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "Gap": {
+      "type": "object",
+      "required": ["kind", "key", "change_id", "detail", "summary", "url"],
+      "properties": {
+        "kind": {"enum": ["empty_release", "shipped_not_planned", "planned_not_shipped", "change_without_ticket",
+                          "unknown_ticket", "unexpected_status", "unmapped_status"]},
+        "key": {"type": ["string", "null"]},
+        "change_id": {"type": ["string", "null"]},
+        "detail": {"type": "string"},
+        "summary": {"type": ["string", "null"]},
+        "url": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "Case": {
+      "description": "One conformance case: a ticket, the changes that name it, and the verdict a correct binding gives.",
+      "type": "object",
+      "required": ["id", "ticket", "changes", "expected"],
+      "properties": {
+        "id": {"type": "string"},
+        "ticket": {"$ref": "#/$defs/Ticket"},
+        "changes": {"type": "array", "items": {"$ref": "#/$defs/Change"}},
+        "expected": {"enum": ["matches", "partial", "unrelated", "unclear"]}
+      }
+    },
+    "CmdBinding": {
+      "description": "An argv list. {release} in any element is replaced by the release id.",
+      "type": "object",
+      "required": ["cmd"],
+      "properties": {"cmd": {"type": "array", "items": {"type": "string"}}},
+      "additionalProperties": false
+    },
+    "ModelBinding": {
+      "description": "A model name passed to the runner's claude -p, with the user's setup stripped.",
+      "type": "object",
+      "required": ["model"],
+      "properties": {"model": {"type": "string"}},
+      "additionalProperties": false
+    }
+  },
+  "capabilities": {
+    "planned_tickets": {
+      "description": "Every ticket with this release's fix version. Input: {release} in the argv.",
+      "stdin": null,
+      "output": {"type": "array", "items": {"$ref": "#/$defs/Ticket"}}
+    },
+    "tickets": {
+      "description": "The tickets for a list of keys. Only the keys found; a missing key is not an error.",
+      "stdin": {"type": "array", "items": {"type": "string"}},
+      "output": {"type": "array", "items": {"$ref": "#/$defs/Ticket"}}
+    },
+    "release_changes": {
+      "description": "Every change (MR or commit) in the release. Input: {release} in the argv.",
+      "stdin": null,
+      "output": {"type": "array", "items": {"$ref": "#/$defs/Change"}}
+    }
+  },
+  "functions": {
+    "change_matches_ticket": {
+      "description": "Does the set of changes, taken together, do what the ticket asks?",
+      "prompt": "prompts/change_matches_ticket.md",
+      "input": {
+        "type": "object",
+        "required": ["ticket", "changes"],
+        "properties": {
+          "ticket": {"$ref": "#/$defs/Ticket"},
+          "changes": {"type": "array", "items": {"$ref": "#/$defs/Change"}}
+        }
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "verdict": {"type": "string", "enum": ["matches", "partial", "unrelated", "unclear"]},
+          "reason": {"type": "string"}
+        },
+        "required": ["verdict", "reason"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "setup": {
+    "description": "A team's setup file. Extra top-level keys are allowed and ignored.",
+    "type": "object",
+    "required": ["name", "class", "fix_version", "bindings", "status_map", "expected_states", "report_dir", "signoff"],
+    "properties": {
+      "name": {"type": "string"},
+      "class": {"type": "string"},
+      "fix_version": {"type": "string"},
+      "bindings": {
+        "type": "object",
+        "required": ["planned_tickets", "tickets", "release_changes", "change_matches_ticket"],
+        "properties": {
+          "planned_tickets": {"$ref": "#/$defs/CmdBinding"},
+          "tickets": {"$ref": "#/$defs/CmdBinding"},
+          "release_changes": {"$ref": "#/$defs/CmdBinding"},
+          "change_matches_ticket": {"oneOf": [{"$ref": "#/$defs/CmdBinding"}, {"$ref": "#/$defs/ModelBinding"}]}
+        },
+        "additionalProperties": false
+      },
+      "status_map": {
+        "type": "object",
+        "additionalProperties": {"enum": ["todo", "in_progress", "awaiting_qa", "in_qa", "done"]}
+      },
+      "expected_states": {
+        "type": "array",
+        "items": {"enum": ["todo", "in_progress", "awaiting_qa", "in_qa", "done"]}
+      },
+      "report_dir": {"type": "string"},
+      "signoff": {"type": "string"},
+      "conformance_cases": {"type": "string"}
+    }
+  }
+}

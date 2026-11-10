@@ -1,0 +1,448 @@
+[
+ {
+  "id": "c01",
+  "ticket": {
+   "key": "DEMO-101",
+   "summary": "Newsletter signup button does nothing on Safari",
+   "description": "Clicking Subscribe on the footer form does nothing in Safari 17. The click handler uses a form.requestSubmit() polyfill that is missing. Make the button submit in Safari.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-101"
+  },
+  "changes": [
+   {
+    "id": "!101",
+    "kind": "mr",
+    "title": "Fix footer signup submit in Safari",
+    "description": "Replaces requestSubmit() with a submit-event dispatch fallback in FooterSignup.tsx and adds a Safari regression test.",
+    "url": "https://git.example/demo/-/merge_requests/101",
+    "ticket_keys": [
+     "DEMO-101"
+    ]
+   }
+  ],
+  "expected": "matches"
+ },
+ {
+  "id": "c02",
+  "ticket": {
+   "key": "DEMO-102",
+   "summary": "Put the new video player behind a feature flag",
+   "description": "Wrap the new VideoPlayerV2 in a flag named video_player_v2, default off, so we can ramp it by percentage.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-102"
+  },
+  "changes": [
+   {
+    "id": "!102",
+    "kind": "mr",
+    "title": "Add video_player_v2 flag",
+    "description": "VideoPlayerV2 now renders only when flag video_player_v2 is on. Default is off in flags.json.",
+    "url": "https://git.example/demo/-/merge_requests/102",
+    "ticket_keys": [
+     "DEMO-102"
+    ]
+   },
+   {
+    "id": "c102a",
+    "kind": "commit",
+    "title": "Add flag to staging config",
+    "description": "Sets video_player_v2 to 10 percent in the staging flag file.",
+    "url": "https://git.example/demo/-/commit/c102a",
+    "ticket_keys": [
+     "DEMO-102"
+    ]
+   }
+  ],
+  "expected": "matches"
+ },
+ {
+  "id": "c03",
+  "ticket": {
+   "key": "DEMO-103",
+   "summary": "Change 'Sign up' to 'Subscribe' on the article footer CTA",
+   "description": "Copy change only. The footer call to action on article pages should read Subscribe instead of Sign up.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-103"
+  },
+  "changes": [
+   {
+    "id": "!103",
+    "kind": "mr",
+    "title": "Footer CTA copy: Subscribe",
+    "description": "Changes the label string in article footer from 'Sign up' to 'Subscribe'. Updates the snapshot.",
+    "url": "https://git.example/demo/-/merge_requests/103",
+    "ticket_keys": [
+     "DEMO-103"
+    ]
+   }
+  ],
+  "expected": "matches"
+ },
+ {
+  "id": "c04",
+  "ticket": {
+   "key": "DEMO-111",
+   "summary": "Add share buttons for Facebook and X to article pages",
+   "description": "Article pages need share buttons for both Facebook and X, with the right share URLs and an analytics click event for each.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-111"
+  },
+  "changes": [
+   {
+    "id": "!111",
+    "kind": "mr",
+    "title": "Add Facebook share button",
+    "description": "Adds a Facebook share button with the share URL to the article toolbar. X is not included.",
+    "url": "https://git.example/demo/-/merge_requests/111",
+    "ticket_keys": [
+     "DEMO-111"
+    ]
+   }
+  ],
+  "expected": "partial"
+ },
+ {
+  "id": "c05",
+  "ticket": {
+   "key": "DEMO-112",
+   "summary": "Bump axios to 1.7.4 to fix the CVE",
+   "description": "Upgrade axios to 1.7.4 across the web app and the image proxy service, both pin 1.6.x.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-112"
+  },
+  "changes": [
+   {
+    "id": "!112",
+    "kind": "mr",
+    "title": "Bump axios to 1.7.4 in web app",
+    "description": "Updates axios in the web app package.json and lockfile. The image proxy is untouched.",
+    "url": "https://git.example/demo/-/merge_requests/112",
+    "ticket_keys": [
+     "DEMO-112"
+    ]
+   }
+  ],
+  "expected": "partial"
+ },
+ {
+  "id": "c06",
+  "ticket": {
+   "key": "DEMO-113",
+   "summary": "Track clicks on the weather widget",
+   "description": "Fire a widget_click analytics event when a user clicks the weather widget.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-113"
+  },
+  "changes": [
+   {
+    "id": "!113",
+    "kind": "mr",
+    "title": "Weather widget click event",
+    "description": "Fires widget_click on the weather widget. Also removes the legacy ticker component and its tests, which nothing else uses.",
+    "url": "https://git.example/demo/-/merge_requests/113",
+    "ticket_keys": [
+     "DEMO-113"
+    ]
+   }
+  ],
+  "expected": "matches"
+ },
+ {
+  "id": "c07",
+  "ticket": {
+   "key": "DEMO-121",
+   "summary": "Fix broken thumbnail on the live blog card",
+   "description": "Live blog cards show a broken image when the lead photo has no 16x9 crop. Fall back to the 4x3 crop.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-121"
+  },
+  "changes": [
+   {
+    "id": "!121",
+    "kind": "mr",
+    "title": "Update eslint config",
+    "description": "Turns on the no-unused-vars rule and fixes the warnings in utils/format.ts.",
+    "url": "https://git.example/demo/-/merge_requests/121",
+    "ticket_keys": [
+     "DEMO-121"
+    ]
+   }
+  ],
+  "expected": "unrelated"
+ },
+ {
+  "id": "c08",
+  "ticket": {
+   "key": "DEMO-122",
+   "summary": "Add a dark mode toggle to settings",
+   "description": "Settings page needs a dark mode toggle that is remembered across visits.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-122"
+  },
+  "changes": [
+   {
+    "id": "!122",
+    "kind": "mr",
+    "title": "Settings page: fix typo in privacy heading",
+    "description": "Corrects 'Privcy' to 'Privacy' in the settings page heading. The settings page file is touched only for that line.",
+    "url": "https://git.example/demo/-/merge_requests/122",
+    "ticket_keys": [
+     "DEMO-122"
+    ]
+   }
+  ],
+  "expected": "unrelated"
+ },
+ {
+  "id": "c09",
+  "ticket": {
+   "key": "DEMO-123",
+   "summary": "Cache the election results API response for 30 seconds",
+   "description": "Add a 30 second cache on the election results endpoint to cut load on the backend.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-123"
+  },
+  "changes": [
+   {
+    "id": "c123a",
+    "kind": "commit",
+    "title": "Rename ResultsTable props",
+    "description": "Renames the rows prop to items in ResultsTable and its callers. No behavior change.",
+    "url": "https://git.example/demo/-/commit/c123a",
+    "ticket_keys": [
+     "DEMO-123"
+    ]
+   }
+  ],
+  "expected": "unrelated"
+ },
+ {
+  "id": "c10",
+  "ticket": {
+   "key": "DEMO-131",
+   "summary": "Fix the thing",
+   "description": "",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-131"
+  },
+  "changes": [
+   {
+    "id": "!131",
+    "kind": "mr",
+    "title": "Fixes",
+    "description": "",
+    "url": "https://git.example/demo/-/merge_requests/131",
+    "ticket_keys": [
+     "DEMO-131"
+    ]
+   }
+  ],
+  "expected": "unclear"
+ },
+ {
+  "id": "c11",
+  "ticket": {
+   "key": "DEMO-132",
+   "summary": "Improve homepage performance",
+   "description": "Homepage feels slow.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-132"
+  },
+  "changes": [
+   {
+    "id": "c132a",
+    "kind": "commit",
+    "title": "wip",
+    "description": "",
+    "url": "https://git.example/demo/-/commit/c132a",
+    "ticket_keys": [
+     "DEMO-132"
+    ]
+   }
+  ],
+  "expected": "unclear"
+ },
+ {
+  "id": "c12",
+  "ticket": {
+   "key": "DEMO-133",
+   "summary": "Update footer links per legal",
+   "description": "See the attached document from legal for the new list of links.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-133"
+  },
+  "changes": [
+   {
+    "id": "!133",
+    "kind": "mr",
+    "title": "Footer links",
+    "description": "As requested.",
+    "url": "https://git.example/demo/-/merge_requests/133",
+    "ticket_keys": [
+     "DEMO-133"
+    ]
+   }
+  ],
+  "expected": "unclear"
+ },
+ {
+  "id": "c13",
+  "ticket": {
+   "key": "DEMO-141",
+   "summary": "Cleanup",
+   "description": "Remove the unused OldBanner component and its stylesheet from the homepage. Nothing imports it any more.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-141"
+  },
+  "changes": [
+   {
+    "id": "!141",
+    "kind": "mr",
+    "title": "Remove OldBanner",
+    "description": "Deletes OldBanner.tsx, OldBanner.css and its test. A grep shows no remaining imports.",
+    "url": "https://git.example/demo/-/merge_requests/141",
+    "ticket_keys": [
+     "DEMO-141"
+    ]
+   }
+  ],
+  "expected": "matches"
+ },
+ {
+  "id": "c14",
+  "ticket": {
+   "key": "DEMO-142",
+   "summary": "Add alt text and captions to gallery images",
+   "description": "Gallery images need both alt text and a visible caption, taken from the CMS fields.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-142"
+  },
+  "changes": [
+   {
+    "id": "!142",
+    "kind": "mr",
+    "title": "Gallery alt text",
+    "description": "Renders the CMS altText field as the alt attribute on gallery images. Captions are not done here.",
+    "url": "https://git.example/demo/-/merge_requests/142",
+    "ticket_keys": [
+     "DEMO-142"
+    ]
+   },
+   {
+    "id": "!143",
+    "kind": "mr",
+    "title": "Gallery captions",
+    "description": "Renders the CMS caption field under each gallery image. Follows the alt text change.",
+    "url": "https://git.example/demo/-/merge_requests/143",
+    "ticket_keys": [
+     "DEMO-142"
+    ]
+   }
+  ],
+  "expected": "matches"
+ },
+ {
+  "id": "c15",
+  "ticket": {
+   "key": "DEMO-143",
+   "summary": "Fix broken thumbnail on the video card",
+   "description": "Video cards show a broken image when the poster has no 16x9 crop. Fall back to the 4x3 crop when there is no 16x9 crop.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-143"
+  },
+  "changes": [
+   {
+    "id": "!144",
+    "kind": "mr",
+    "title": "Hide broken video card image",
+    "description": "When the 16x9 crop is missing, the card hides the image instead of showing a broken one. No 4x3 crop is used.",
+    "url": "https://git.example/demo/-/merge_requests/144",
+    "ticket_keys": [
+     "DEMO-143"
+    ]
+   }
+  ],
+  "expected": "partial"
+ },
+ {
+  "id": "c16",
+  "ticket": {
+   "key": "DEMO-144",
+   "summary": "Show a breaking news banner on the homepage",
+   "description": "Add a breaking news banner at the top of the homepage, driven by the alerts feed.",
+   "status": "In QA",
+   "fix_versions": [
+    "demo-1.0"
+   ],
+   "url": "https://jira.example/browse/DEMO-144"
+  },
+  "changes": [
+   {
+    "id": "!145",
+    "kind": "mr",
+    "title": "Breaking news banner",
+    "description": "Adds BreakingBanner to the homepage, reading the alerts feed.",
+    "url": "https://git.example/demo/-/merge_requests/145",
+    "ticket_keys": [
+     "DEMO-144"
+    ]
+   },
+   {
+    "id": "c145a",
+    "kind": "commit",
+    "title": "Revert breaking news banner",
+    "description": "Reverts !145 in full. The banner and its feed code are gone.",
+    "url": "https://git.example/demo/-/commit/c145a",
+    "ticket_keys": [
+     "DEMO-144"
+    ]
+   }
+  ],
+  "expected": "unrelated"
+ }
+]
