@@ -49,7 +49,7 @@ describe("binding", () => {
     assert.deepEqual([...s.required].sort(), ["reason", "verdict"]);
   });
 
-  // New in 0.2.0: the setup schema refuses what Python ignored.
+  // The setup schema refuses shapes it does not declare.
   test("an undeclared binding is refused", () => {
     const bad = { ...GOOD, bindings: { ...GOOD.bindings, close_release: { cmd: ["x"] } } };
     throwsWith(() => loadSetup(writeSetup(bad), CLS), SetupError, "close_release");

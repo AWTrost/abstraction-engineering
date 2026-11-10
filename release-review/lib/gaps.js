@@ -4,7 +4,7 @@ export const KIND_ORDER = ["empty_release", "shipped_not_planned", "planned_not_
   "unknown_ticket", "unexpected_status", "unmapped_status"];
 
 const upperUnique = (keys) => [...new Set((keys ?? []).map((k) => k.toUpperCase()))];
-const cmp = (a, b) => (a < b ? -1 : a > b ? 1 : 0); // code-point order, as Python sorts
+const cmp = (a, b) => (a < b ? -1 : a > b ? 1 : 0); // code-point order, not locale order
 
 export function namedKeys(changes) {
   return upperUnique(changes.flatMap((c) => c.ticket_keys ?? []));

@@ -5,7 +5,7 @@ import { CLASS_DIR, callCapability } from "./binding.js";
 import * as fuzzy from "./fuzzy.js";
 import { KIND_ORDER, findGaps, namedKeys } from "./gaps.js";
 
-/** A local time with no zone, as Python's isoformat(timespec="seconds") prints it. */
+/** A local time with no zone, to the second (YYYY-MM-DDTHH:MM:SS). */
 function localIso() {
   const d = new Date();
   return new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 19);
