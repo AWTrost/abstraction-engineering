@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22  # node --test expands "test/*.test.js" itself only from Node 21
       - name: Class tests
         run: cd release-review && npm test
       - name: No home paths
