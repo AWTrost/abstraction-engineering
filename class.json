@@ -1,6 +1,6 @@
 {
   "name": "release-review",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "states": ["todo", "in_progress", "awaiting_qa", "in_qa", "done"],
   "$defs": {
     "Ticket": {
