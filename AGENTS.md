@@ -20,7 +20,7 @@ The papers on abstraction engineering (designing the shared, versioned process t
 - **Keep the hedges.** The evidence is one class, one team's setup, one runtime. Do not drop a caveat to make a claim read stronger. A claim the evidence weakens goes under "It weakens or qualifies" in paper 1, not out of the paper.
 - **Plain words.** Short sentences, no hype, terms from paper 1's "Words used here" used the way it defines them. Define a new term there before using it.
 - **Paper 2 material is observations.** Add a new item to the section it fits. An idea not yet seen in a run goes under "Where the model sits" with what would test it. Do not repeat what paper 1's "For paper 2" list already says.
-- **Cold-read before merging a paper change.** Changes to paper 1 get a cold read by a reviewer with no context of the edit (in the owner's setup, the percy agent), and its must-fix items are fixed before merge.
+- **Cold-read before merging a paper change.** Changes to paper 1 get a cold read by a reviewer with no context of the edit, and its must-fix items are fixed before merge.
 
 ## Rules for the class
 
