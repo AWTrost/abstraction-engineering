@@ -1,0 +1,21 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Class tests
+        run: cd release-review && npm test
+      - name: No home paths
+        run: |
+          if git grep -nE '/(home|Users)/[A-Za-z0-9_.-]+' -- ':!.github'; then
+            echo "A home path is in the repo (above). Remove it before this goes public."
+            exit 1
+          fi
