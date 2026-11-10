@@ -19,7 +19,7 @@ The tests never call a model.
 
 ## How to use this repo
 
-The repo is the idea plus one worked example. It is not a library of classes, and new classes are not expected here. Pick the path that fits what you want.
+The repo is the idea plus one worked example. It is not a library of classes; it holds a few, starting with one. Pick the path that fits what you want.
 
 **To understand the idea**, read paper 1 first. Its "Words used here" section defines the terms the rest of the repo uses. Then read the paper 2 material for what running a class has shown so far.
 
