@@ -47,9 +47,21 @@ The class reads through its capabilities and writes only its two report files. E
 - A relative `report_dir` is resolved from the current directory.
 - Variables set in `~/.claude/settings.json` `env` do not reach a `model` binding, because `--setting-sources ""` skips that file (checked 2026-11-09). A provider configured there (Bedrock, Vertex, a gateway) must be set in the shell environment, or bound through `cmd`. A failed model call's reason says so.
 
+## Code layout
+
+The source is TypeScript in `src/`, in two halves:
+
+- `src/runtime/`: what any class needs. It loads the contract and a setup, checks the pin, validates JSON against the contract, calls capabilities and typed functions, writes output files all or nothing, installs the skill, and runs the CLI. It never imports class code; `test/seam.test.ts` fails if it does. When a second or third class arrives, this folder moves out into a shared package as it is.
+- `src/release-review/`: this class: the gap rules, the review flow, the typed function's input and fallback, conformance scoring, the report and the commands.
+
+`dist/` is the compiled JavaScript, and it is committed. Node does not strip types from files under `node_modules`, so an installed package must ship JavaScript, and committing it means a git install needs no build step and no dependencies. CI fails if `dist/` does not match a fresh build.
+
 ## Tests
 
-    npm test
+    npm ci
+    npm run check
+
+`check` type-checks the source and tests, rebuilds `dist/`, fails if `dist/` changed, and runs the tests. The tests run the TypeScript directly, which needs Node 22.18 or later; the installed package runs on Node 20. After changing `src/`, run `npm run build` and commit `dist/` with it.
 
 Unit tests never call a model. The fixtures are JSON and small Node commands in `test/fixtures/`.
 

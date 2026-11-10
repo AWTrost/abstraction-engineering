@@ -13,7 +13,7 @@ This repo holds the papers on that idea and the one class built to test it.
 
 [`agent-classes/release-review/`](agent-classes/release-review/) is an agent-class packaged for npm. It compares a release's planned tickets with the changes that shipped, and writes a gap report for a person to sign off. Everything exact is code. One judgement, whether a ticket's changes do what it asked, is a typed function that setup binds to a model or a command.
 
-    cd agent-classes/release-review && npm test
+    cd agent-classes/release-review && npm ci && npm run check
 
 The tests never call a model.
 

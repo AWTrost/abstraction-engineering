@@ -7,12 +7,15 @@
     "release-review": "bin/release-review.js"
   },
   "exports": {
-    ".": "./lib/review.js",
+    ".": {
+      "types": "./dist/release-review/review.d.ts",
+      "default": "./dist/release-review/review.js"
+    },
     "./class.json": "./class.json"
   },
   "files": [
     "bin",
-    "lib",
+    "dist",
     "class.json",
     "prompts",
     "conformance",
@@ -21,10 +24,17 @@
     "README.md"
   ],
   "scripts": {
-    "test": "node --test \"test/*.test.js\""
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.test.json",
+    "test": "node --test \"test/*.test.ts\"",
+    "check": "npm run typecheck && npm run build && git diff --exit-code -- dist && npm test"
   },
   "engines": {
     "node": ">=20"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "typescript": "7.0.2"
+  }
 }

@@ -13,7 +13,8 @@ The papers on abstraction engineering (designing the shared, versioned process t
 
 ## Commands
 
-- Class tests: `cd agent-classes/release-review && npm test`. There are no tests at the repo root. The tests never call a model.
+- Class checks: `cd agent-classes/release-review && npm ci && npm run check` (type-check, rebuild, fail if the committed `dist/` is stale, then the tests). There are no tests at the repo root. The tests never call a model.
+- After changing a class's `src/`, run `npm run build` in its folder and commit `dist/` with the change.
 - Home path check: `! git grep -nE '/(home|Users)/[A-Za-z0-9_.-]+' -- ':!.github'` (the same check CI runs).
 
 ## Rules for the papers
