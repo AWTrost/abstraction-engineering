@@ -12,7 +12,7 @@ jobs:
         with:
           node-version: 22  # node --test expands "test/*.test.js" itself only from Node 21
       - name: Class tests
-        run: cd agent-classes/release-review && npm test
+        run: cd agent-classes/release-review && npm ci && npm run check
       - name: No home paths
         run: |
           if git grep -nE '/(home|Users)/[A-Za-z0-9_.-]+' -- ':!.github'; then
