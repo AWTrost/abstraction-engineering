@@ -10,7 +10,7 @@ export const tmp = () => mkdtempSync(join(tmpdir(), "rr-"));
 
 export const GOOD = {
   name: "demo",
-  class: "release-review@0.2.0",
+  class: "release-review@0.2.1",
   fix_version: "{release}",
   bindings: {
     planned_tickets: { cmd: ["x"] },

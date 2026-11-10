@@ -27,7 +27,7 @@ test("an installed tarball links its skill and writes a report", { timeout: 120_
   assert.ok(existsSync(join(link, "SKILL.md")));
 
   const cmd = (cap) => ({ cmd: [NODE, join(FIX, "fake_binding.js"), join(FIX, "demo"), cap, "{release}"] });
-  const setup = { name: "demo", class: "release-review@0.2.0", fix_version: "{release}",
+  const setup = { name: "demo", class: "release-review@0.2.1", fix_version: "{release}",
     bindings: { planned_tickets: cmd("planned_tickets"), tickets: cmd("tickets"), release_changes: cmd("release_changes"),
       change_matches_ticket: { cmd: [NODE, join(FIX, "fake_match.js")] } },
     status_map: { "In QA": "in_qa", Ready: "todo", Closed: "done" }, expected_states: ["in_qa"],
@@ -36,5 +36,5 @@ test("an installed tarball links its skill and writes a report", { timeout: 120_
   const [md, js] = npx("run", "--setup", "setup.json", "--release", "demo-1.0").trim().split("\n");
   // A relative report_dir resolves from the current directory, here the project.
   assert.ok(md.endsWith("release-review-demo-1.0.md") && existsSync(join(project, md)));
-  assert.equal(JSON.parse(readFileSync(join(project, js), "utf8")).class, "release-review@0.2.0");
+  assert.equal(JSON.parse(readFileSync(join(project, js), "utf8")).class, "release-review@0.2.1");
 });

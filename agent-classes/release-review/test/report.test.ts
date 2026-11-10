@@ -6,7 +6,7 @@ import type { Report } from "../src/release-review/types.ts";
 import { tmp } from "./helpers.ts";
 
 const DATA: Report = {
-  release: "r1", class: "release-review@0.2.0", setup: "demo", function_binding: "cmd",
+  release: "r1", class: "release-review@0.2.1", setup: "demo", function_binding: "cmd",
   generated: "2026-01-01T00:00:00", cost_usd: 0, signoff: "someone",
   counts: { planned: 1, shipped: 1, earlier_work: 1 },
   gaps: [{ kind: "unmapped_status", key: "D-1", change_id: null, detail: "x|y", summary: "s", url: "u" }],

@@ -1,6 +1,6 @@
 {
   "name": "my-team",
-  "class": "release-review@0.2.0",
+  "class": "release-review@0.2.1",
   "fix_version": "{release}",
   "bindings": {
     "planned_tickets": {"cmd": ["node", "bindings/tickets.js", "planned", "{release}"]},
