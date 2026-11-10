@@ -8,7 +8,7 @@ The program drives and the model fills one typed function. Everything exact (the
 
 The package is installed from a git tag, not a registry:
 
-    npm i -D "git+ssh://<ai-workflow git url>#release-review-v0.2.0"
+    npm i -D "git+ssh://git@github.com/AWTrost/abstraction-engineering.git#release-review-v<version>"
     npx --no release-review install-skill
 
 The tag points at a commit holding only this folder (see Releasing), because npm cannot install a subfolder of a repo. The lockfile pins the commit. `install-skill` links `.claude/skills/release-review` to the skill in `node_modules`, so the skill follows upgrades; with `--copy`, or where a link cannot be made, it copies and you re-run it after each upgrade. An agent other than Claude Code reads `node_modules/@agent-class/release-review/skill/SKILL.md`.
@@ -55,7 +55,7 @@ Unit tests never call a model. The fixtures are JSON and small Node commands in 
 
 ## Releasing
 
-From the ai-workflow repo root, with the change merged:
+From the repo root, with the change merged:
 
     git tag release-review-v<version> "$(git subtree split --prefix agent-classes/release-review)"
 
