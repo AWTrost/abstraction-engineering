@@ -36,15 +36,6 @@ A setup may add `conformance_cases`: a path, relative to the setup file, to a JS
 
 A setup is pinned (`"class": "release-review@0.2.0"`) and another version's setup is refused, so a class change never silently reinterprets an old setup.
 
-## Changes from 0.1.0 (the Python class)
-
-- `summary`, `title`, `description` and `url` must be a string or null; `id` must be a string.
-- `bindings` refuses a key the class does not declare, and the fuzzy binding must be exactly one of `cmd` or `model`.
-- The fuzzy result is checked against its whole schema, so an extra key is `unclear`.
-- Errors come from the schema check, as `<where>: <path>: <problem>`.
-- New commands `check-setup` and `install-skill`, and the optional `conformance_cases`.
-- Gap detail texts quote values JSON-style (`"x"`), where Python printed `'x'`.
-
 ## Scope
 
 The class reads through its capabilities and writes only its two report files. Every capability is a read, and a setup cannot bind one the class does not declare. A `cmd` binding is the team's own code, so keep it read-only. Closing out a release (fix versions, transitions, comments, deploys) is beyond the class: the report is signed off by a person, and any write is the team's own tool with its own approval.
