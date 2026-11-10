@@ -57,6 +57,6 @@ Unit tests never call a model. The fixtures are JSON and small Node commands in 
 
 From the repo root, with the change merged:
 
-    git tag release-review-v<version> "$(git subtree split --prefix release-review)"
+    git tag release-review-v<version> "$(git subtree split --prefix agent-classes/release-review)"
 
 Install by the tag, never by the split's bare commit id: git does not fetch a commit no ref reaches, so `#<sha>` fails with "unknown git error". Push the tag only with the owner's go. Bump `version` in `package.json` and `class.json` together; a change to what a setup or binding may contain is a new version.

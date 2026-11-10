@@ -6,13 +6,14 @@ The papers on abstraction engineering (designing the shared, versioned process t
 
 - `papers/paper-1-classes-in-the-abstract.md`: paper 1, classes in the abstract. It is a finished, versioned text: the date and version are on line 3, and "the first version" in the text means the Nov 8 original.
 - `papers/paper-2-material.md`: notes toward paper 2, classes in action. They are not a finished text. Each item is an observation from a run, except the section "Where the model sits", which holds ideas, each with what would test it.
-- `release-review/`: the release-review agent-class as an npm package. This repo is its home: it is developed and released from here. Its `README.md` has the contract, commands, known limits and how to release; `class.json` is the contract in JSON Schema. A new agent-class goes in its own top-level folder, released the same way.
+- `agent-classes/`: the agent-classes, one folder each; its `README.md` lists them.
+- `agent-classes/release-review/`: the release-review agent-class as an npm package. This repo is its home: it is developed and released from here. Its `README.md` has the contract, commands, known limits and how to release; `class.json` is the contract in JSON Schema. A new agent-class goes in its own folder under `agent-classes/`, released the same way.
 - `README.md`: what a visitor reads first.
 - `.github/workflows/ci.yml`: on every PR, runs the class tests and fails on a home path anywhere in the repo.
 
 ## Commands
 
-- Class tests: `cd release-review && npm test`. There are no tests at the repo root. The tests never call a model.
+- Class tests: `cd agent-classes/release-review && npm test`. There are no tests at the repo root. The tests never call a model.
 - Home path check: `! git grep -nE '/(home|Users)/[A-Za-z0-9_.-]+' -- ':!.github'` (the same check CI runs).
 
 ## Rules for the papers
