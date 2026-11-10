@@ -17,10 +17,10 @@ function throwsWith(fn, cls, ...parts) {
 }
 
 describe("binding", () => {
-  test("testPinMatches", () => checkPin({ class: "release-review@0.2.0" }, CLS));
+  test("testPinMatches", () => checkPin({ class: "release-review@0.2.1" }, CLS));
 
   test("testPinMismatchNamesBoth", () => {
-    throwsWith(() => checkPin({ class: "release-review@0.0.9" }, CLS), PinError, "0.0.9", "0.2.0");
+    throwsWith(() => checkPin({ class: "release-review@0.0.9" }, CLS), PinError, "0.0.9", "0.2.1");
   });
 
   test("testLoadSetupOk", () => assert.deepEqual(loadSetup(writeSetup(GOOD), CLS), GOOD));

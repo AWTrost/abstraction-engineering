@@ -1,6 +1,6 @@
 {
   "name": "@agent-class/release-review",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An agent-class that reports planned-vs-shipped gaps for a release. Read only.",
   "type": "module",
   "bin": {

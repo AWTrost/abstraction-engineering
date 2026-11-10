@@ -11,7 +11,7 @@ const FAIL = [NODE, "-e", "process.exit(1)"];
 
 interface SetupOpts { fixture?: string; ticketsCmd?: string[]; plannedCmd?: string[]; cls?: string; extra?: object }
 
-function makeSetup({ fixture = "demo", ticketsCmd, plannedCmd, cls = "release-review@0.2.0", extra = {} }: SetupOpts = {}) {
+function makeSetup({ fixture = "demo", ticketsCmd, plannedCmd, cls = "release-review@0.2.1", extra = {} }: SetupOpts = {}) {
   const d = tmp();
   const cmd = (cap) => ({ cmd: [NODE, join(FIX, "fake_binding.js"), join(FIX, fixture), cap, "{release}"] });
   const b = Object.fromEntries(["planned_tickets", "tickets", "release_changes"].map((c) => [c, cmd(c)]));

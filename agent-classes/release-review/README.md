@@ -34,7 +34,7 @@ A capability binding is `{"cmd": [argv...]}`. `{release}` in the argv is replace
 
 A setup may add `conformance_cases`: a path, relative to the setup file, to a JSON list of `Case` from the team's own past releases. `conformance --setup` scores them apart from the class's cases, as a held-out set. Keep that file outside every shared repo; it is work content.
 
-A setup is pinned (`"class": "release-review@0.2.0"`) and another version's setup is refused, so a class change never silently reinterprets an old setup.
+A setup is pinned (`"class": "release-review@0.2.1"`) and another version's setup is refused, so a class change never silently reinterprets an old setup.
 
 ## Scope
 
