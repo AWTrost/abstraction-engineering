@@ -1,5 +1,5 @@
 // The review flow: read the three capabilities, find the gaps, ask the typed function about each pair.
-import { callCapability } from "../runtime/capability.js";
+import { BindingError, callCapability } from "../runtime/capability.js";
 import { loadPrompt } from "../runtime/classdef.js";
 import { KIND_ORDER, findGaps, namedKeys } from "./gaps.js";
 import * as match from "./match.js";
@@ -8,6 +8,16 @@ import { CLASS_DIR } from "./paths.js";
 function localIso() {
     const d = new Date();
     return new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 19);
+}
+/** The diffs of the given changes, by id. A missing id stops the run: a verdict without its diff is a guess. */
+export function changeDiffs(setup, cls, vars, ids) {
+    if (!ids.length)
+        return new Map();
+    const got = new Map(callCapability(setup, cls, "change_diffs", vars, ids).map((d) => [d.id, d.diff]));
+    const missing = ids.filter((i) => !got.has(i));
+    if (missing.length)
+        throw new BindingError("change_diffs", `no diff for ${missing.slice(0, 5).join(", ")}${missing.length > 5 ? ` and ${missing.length - 5} more` : ""}`);
+    return got;
 }
 export function run(setup, cls, release) {
     const vars = { release };
@@ -28,8 +38,10 @@ export function run(setup, cls, release) {
     const fb = setup.bindings.change_matches_ticket;
     const verdicts = [];
     let cost = 0;
+    const diffs = changeDiffs(setup, cls, vars, [...new Set(res.pairs.flatMap((p) => p.change_ids))]);
     for (const p of res.pairs) {
-        const [inputs, cut] = match.payload(p.ticket, p.change_ids.map((i) => byId.get(i)));
+        const judged = p.change_ids.map((i) => ({ ...byId.get(i), diff: diffs.get(i) }));
+        const [inputs, cut] = match.payload(p.ticket, judged);
         const [r, c] = match.call(fb, prompt, fn.output, inputs);
         cost += c;
         verdicts.push({ key: p.key, verdict: r.verdict, reason: r.reason, truncated: cut });

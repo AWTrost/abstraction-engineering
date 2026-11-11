@@ -1,6 +1,6 @@
 {
   "name": "release-review",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "states": ["todo", "in_progress", "awaiting_qa", "in_qa", "done"],
   "$defs": {
     "Ticket": {
@@ -29,6 +29,29 @@
         "ticket_keys": {"type": "array", "items": {"type": "string"}}
       }
     },
+    "JudgedChange": {
+      "description": "A Change with its code diff, as change_matches_ticket sees it. Extra keys are allowed and ignored.",
+      "type": "object",
+      "required": ["id", "kind", "title", "description", "url", "ticket_keys", "diff"],
+      "properties": {
+        "id": {"type": "string"},
+        "kind": {"enum": ["mr", "commit"]},
+        "title": {"type": ["string", "null"]},
+        "description": {"type": ["string", "null"]},
+        "url": {"type": ["string", "null"]},
+        "ticket_keys": {"type": "array", "items": {"type": "string"}},
+        "diff": {"type": "string"}
+      }
+    },
+    "ChangeDiff": {
+      "description": "The code diff of one change. An empty string is a change with no code, such as an empty merge commit.",
+      "type": "object",
+      "required": ["id", "diff"],
+      "properties": {
+        "id": {"type": "string"},
+        "diff": {"type": "string"}
+      }
+    },
     "Gap": {
       "type": "object",
       "required": ["kind", "key", "change_id", "detail", "summary", "url"],
@@ -50,7 +73,7 @@
       "properties": {
         "id": {"type": "string"},
         "ticket": {"$ref": "#/$defs/Ticket"},
-        "changes": {"type": "array", "items": {"$ref": "#/$defs/Change"}},
+        "changes": {"type": "array", "items": {"$ref": "#/$defs/JudgedChange"}},
         "expected": {"enum": ["matches", "partial", "unrelated", "unclear"]}
       }
     },
@@ -84,6 +107,11 @@
       "description": "Every change (MR or commit) in the release. Input: {release} in the argv.",
       "stdin": null,
       "output": {"type": "array", "items": {"$ref": "#/$defs/Change"}}
+    },
+    "change_diffs": {
+      "description": "The code diff of each change id on stdin. Every id must come back, or the run stops, because the verdicts are judged from the diffs. Called only for the changes change_matches_ticket judges.",
+      "stdin": {"type": "array", "items": {"type": "string"}},
+      "output": {"type": "array", "items": {"$ref": "#/$defs/ChangeDiff"}}
     }
   },
   "functions": {
@@ -95,7 +123,7 @@
         "required": ["ticket", "changes"],
         "properties": {
           "ticket": {"$ref": "#/$defs/Ticket"},
-          "changes": {"type": "array", "items": {"$ref": "#/$defs/Change"}}
+          "changes": {"type": "array", "items": {"$ref": "#/$defs/JudgedChange"}}
         }
       },
       "output": {
@@ -119,11 +147,12 @@
       "fix_version": {"type": "string"},
       "bindings": {
         "type": "object",
-        "required": ["planned_tickets", "tickets", "release_changes", "change_matches_ticket"],
+        "required": ["planned_tickets", "tickets", "release_changes", "change_diffs", "change_matches_ticket"],
         "properties": {
           "planned_tickets": {"$ref": "#/$defs/CmdBinding"},
           "tickets": {"$ref": "#/$defs/CmdBinding"},
           "release_changes": {"$ref": "#/$defs/CmdBinding"},
+          "change_diffs": {"$ref": "#/$defs/CmdBinding"},
           "change_matches_ticket": {"oneOf": [{"$ref": "#/$defs/CmdBinding"}, {"$ref": "#/$defs/ModelBinding"}]}
         },
         "additionalProperties": false

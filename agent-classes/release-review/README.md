@@ -26,15 +26,17 @@ Exit 2 means a refusal (bad setup, pin, binding failure, bad release id) with on
 
 ## The contract
 
-`class.json` is the contract, in JSON Schema: the `Ticket`, `Change`, `Gap` and `Case` shapes, each capability's `stdin` and `output`, the fuzzy function's `input` and `output`, and the `setup` file. A binding in any language can be checked against it with any validator. The class checks it with `lib/validate.js`, which supports only the keywords the file uses; a test fails if `class.json` uses another.
+`class.json` is the contract, in JSON Schema: the `Ticket`, `Change`, `JudgedChange`, `ChangeDiff`, `Gap` and `Case` shapes, each capability's `stdin` and `output`, the fuzzy function's `input` and `output`, and the `setup` file. A binding in any language can be checked against it with any validator. The class checks it with `lib/validate.js`, which supports only the keywords the file uses; a test fails if `class.json` uses another.
 
-A capability binding is `{"cmd": [argv...]}`. `{release}` in the argv is replaced by the release id. `tickets` also gets a JSON list of keys on stdin. Output is JSON on stdout. A nonzero exit, a timeout (300 s) or a shape miss stops the run, because a report built on a half-read system would look complete and be wrong.
+A capability binding is `{"cmd": [argv...]}`. `{release}` in the argv is replaced by the release id. `tickets` also gets a JSON list of keys on stdin, and `change_diffs` a JSON list of change ids. Output is JSON on stdout. A nonzero exit, a timeout (300 s) or a shape miss stops the run, because a report built on a half-read system would look complete and be wrong.
 
-`change_matches_ticket` is bound to `{"model": "<name>"}`, which runs the class's prompt and schema through the runner's `claude -p` with the user's setup stripped (`--tools "" --setting-sources "" --strict-mcp-config --no-session-persistence`), or to `{"cmd": [...]}`, which gets `{ticket, changes}` on stdin and prints `{verdict, reason}`. A runner on another provider uses `cmd`. Any failure comes back as verdict `unclear`.
+`change_diffs` is required because the verdicts are judged from the code, not from what a commit message says it did. The class calls it once per run, with only the ids of the changes it will judge, and every id must come back: a missing one stops the run. An empty string is a valid diff, for a change with no code.
+
+`change_matches_ticket` is bound to `{"model": "<name>"}`, which runs the class's prompt and schema through the runner's `claude -p` with the user's setup stripped (`--tools "" --setting-sources "" --strict-mcp-config --no-session-persistence`), or to `{"cmd": [...]}`, which gets `{ticket, changes}` on stdin, each change with its `diff`, and prints `{verdict, reason}`. A runner on another provider uses `cmd`. Any failure comes back as verdict `unclear`.
 
 A setup may add `conformance_cases`: a path, relative to the setup file, to a JSON list of `Case` from the team's own past releases. `conformance --setup` scores them apart from the class's cases, as a held-out set. Keep that file outside every shared repo; it is work content.
 
-A setup is pinned (`"class": "release-review@0.2.1"`) and another version's setup is refused, so a class change never silently reinterprets an old setup.
+A setup is pinned (`"class": "release-review@0.3.0"`) and another version's setup is refused, so a class change never silently reinterprets an old setup.
 
 ## Scope
 

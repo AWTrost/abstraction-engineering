@@ -11,7 +11,7 @@ This repo holds the papers on that idea and the one class built to test it.
 
 ## The class
 
-[`agent-classes/release-review/`](agent-classes/release-review/) is an agent-class packaged for npm. It compares a release's planned tickets with the changes that shipped, and writes a gap report for a person to sign off. Everything exact is code. One judgement, whether a ticket's changes do what it asked, is a typed function that setup binds to a model or a command.
+[`agent-classes/release-review/`](agent-classes/release-review/) is an agent-class packaged for npm. It compares a release's planned tickets with the changes that shipped, and writes a gap report for a person to sign off. Everything exact is code. One judgement, whether a ticket's changes do what it asked, is a typed function that setup binds to a model or a command. It is a showcase copy: the class is developed in a private repo, and each released version is copied here.
 
     cd agent-classes/release-review && npm ci && npm run check
 
@@ -29,14 +29,14 @@ The repo is the idea plus one worked example. It is not a library of classes; it
 
 1. Install the class from its release tag, and link its skill for Claude Code ([Install](agent-classes/release-review/README.md#install)):
 
-       npm i -D "git+ssh://git@github.com/AWTrost/abstraction-engineering.git#release-review-v0.2.1"
+       npm i -D "git+ssh://git@github.com/AWTrost/abstraction-engineering.git#release-review-v0.3.0"
        npx --no release-review install-skill
 
 2. Copy the example setup into your project:
 
        cp node_modules/@agent-class/release-review/setup.example.json release-review.setup.json
 
-3. Write the three read-only commands the setup's `bindings` point at, one each for `planned_tickets`, `tickets` and `release_changes`. Each prints JSON in the shapes `class.json` defines ([The contract](agent-classes/release-review/README.md#the-contract)).
+3. Write the four read-only commands the setup's `bindings` point at, one each for `planned_tickets`, `tickets`, `release_changes` and `change_diffs`. Each prints JSON in the shapes `class.json` defines ([The contract](agent-classes/release-review/README.md#the-contract)).
 
 4. Fill in the rest of the setup: `status_map`, `expected_states`, `report_dir`, `signoff`, and the model for `change_matches_ticket`.
 

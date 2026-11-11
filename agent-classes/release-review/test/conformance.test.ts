@@ -14,21 +14,21 @@ describe("conformance", () => {
   test("testCaseCountsPerVerdict", () => {
     const counts = {};
     for (const c of CASES) counts[c.expected] = (counts[c.expected] ?? 0) + 1;
-    assert.deepEqual(counts, { matches: 6, partial: 3, unrelated: 4, unclear: 3 });
+    assert.deepEqual(counts, { matches: 7, partial: 4, unrelated: 6, unclear: 2 });
   });
 
   test("testScoreWithOracleCmd", () => {
     const r = conformance.score(CASES, { cmd: [NODE, ORACLE] }, CLS);
-    assert.deepEqual([r.n, r.correct, r.score, r.misses, r.hard_misses], [16, 16, 1, [], []]);
+    assert.deepEqual([r.n, r.correct, r.score, r.misses, r.hard_misses], [19, 19, 1, [], []]);
   });
 
   test("testScoreCountsMisses", () => {
     const r = conformance.score(CASES, { cmd: [NODE, "-e", `console.log('{"verdict": "matches", "reason": "x"}')`] }, CLS);
-    assert.deepEqual([r.correct, r.score], [6, 0.375]);
+    assert.deepEqual([r.correct, r.score], [7, 7 / 19]);
     assert.deepEqual(r.misses, CASES.filter((c) => c.expected !== "matches").map((c) => c.id));
-    assert.equal(r.misses.length, 10);
+    assert.equal(r.misses.length, 12);
     assert.deepEqual(r.hard_misses, CASES.filter((c) => ["partial", "unrelated"].includes(c.expected)).map((c) => c.id));
-    assert.equal(r.hard_misses.length, 7);
+    assert.equal(r.hard_misses.length, 10);
     assert.equal(conformance.mainExit(r), 1);
   });
 
@@ -40,7 +40,7 @@ describe("conformance", () => {
       if (JSON.parse(d).ticket.key === ${JSON.stringify(hard.ticket.key)}) console.log('{"verdict": "matches", "reason": "x"}');
       else process.stdout.write(spawnSync(process.execPath, [${JSON.stringify(ORACLE)}], { input: d, encoding: "utf8" }).stdout);`;
     const r = conformance.score(CASES, { cmd: [NODE, "-e", code] }, CLS);
-    assert.deepEqual([r.correct, r.score, r.misses, r.hard_misses], [15, 15 / 16, [hard.id], [hard.id]]);
+    assert.deepEqual([r.correct, r.score, r.misses, r.hard_misses], [18, 18 / 19, [hard.id], [hard.id]]);
     assert.ok(r.score >= conformance.PASS);
     assert.equal(conformance.mainExit(r), 1);
   });
