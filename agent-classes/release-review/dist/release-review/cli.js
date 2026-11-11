@@ -10,7 +10,7 @@ import { CASES_PATH, passes, score } from "./conformance.js";
 import { namedKeys } from "./gaps.js";
 import { CLASS_DIR, loadClass } from "./paths.js";
 import { write } from "./report.js";
-import { run } from "./review.js";
+import { changeDiffs, run } from "./review.js";
 const USAGE = `usage: release-review run --setup <path> --release <id>
        release-review check-setup --setup <path> --release <id>
        release-review conformance (--model <name> | --setup <path>)
@@ -76,6 +76,15 @@ function cmdCheckSetup(v, d) {
     }
     else {
         d.out("skipped tickets: no change names a ticket");
+    }
+    // A few ids are enough to prove the binding answers in shape; the run asks for all it needs.
+    const sample = changes.slice(0, 3).map((c) => c.id);
+    if (sample.length) {
+        changeDiffs(setup, cls, vars, sample);
+        d.out(`ok change_diffs: ${sample.length} of ${sample.length} diffs found`);
+    }
+    else {
+        d.out("skipped change_diffs: the release has no changes");
     }
     if (setup.conformance_cases !== undefined) {
         d.out(`ok conformance_cases: ${loadTeamCases(setup, str(v, "setup"), cls).length} cases`);

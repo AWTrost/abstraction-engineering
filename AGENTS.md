@@ -7,7 +7,7 @@ The papers on abstraction engineering (designing the shared, versioned process t
 - `papers/paper-1-classes-in-the-abstract.md`: paper 1, classes in the abstract. It is a finished, versioned text: the date and version are on line 3, and "the first version" in the text means the Nov 8 original.
 - `papers/paper-2-material.md`: notes toward paper 2, classes in action. They are not a finished text. Each item is an observation from a run, except the section "Where the model sits", which holds ideas, each with what would test it.
 - `agent-classes/`: the agent-classes, one folder each; its `README.md` lists them.
-- `agent-classes/release-review/`: the release-review agent-class as an npm package. This repo is its home: it is developed and released from here. Its `README.md` has the contract, commands, known limits and how to release; `class.json` is the contract in JSON Schema. A new agent-class goes in its own folder under `agent-classes/`, released the same way.
+- `agent-classes/release-review/`: the release-review agent-class as an npm package. This is a showcase copy. The class is developed and released from a private repo, and each version is ported here once it is released there, with no work content. Don't develop the class here first. Its `README.md` has the contract, commands and known limits; `class.json` is the contract in JSON Schema. A new agent-class goes in its own folder under `agent-classes/`.
 - `README.md`: what a visitor reads first.
 - `.github/workflows/ci.yml`: on every PR, runs the class tests and fails on a home path anywhere in the repo.
 
@@ -28,8 +28,8 @@ The papers on abstraction engineering (designing the shared, versioned process t
 
 ## Rules for the class
 
-- Each class is released by a tag on a `git subtree split` of its folder, because npm cannot install a subfolder of a repo. The class README's Releasing section has the command. Push a release tag only with the owner's go.
-- Installed copies pin a tag. A change reaches a team only when they re-pin, so a change to what a setup or binding may contain is a new version.
+- A class change starts in the private home repo. Port it here only after that version is released there, and keep the two copies' class code equal; this copy's fixtures may differ only to pass the home-path check.
+- Nothing is released or tagged from this repo; it shows the code. Teams install a class from its private home repo at a pinned version, so a change reaches a team only when they re-pin, and a change to what a setup or binding may contain is a new version.
 - Keep `version` in `package.json` and `class.json` equal; a change to what a setup or binding may contain is a new version.
 
 ## Git

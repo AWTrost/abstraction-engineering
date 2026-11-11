@@ -9,15 +9,16 @@ import { FIX, NODE, tmp } from "./helpers.ts";
 
 const FAIL = [NODE, "-e", "process.exit(1)"];
 
-interface SetupOpts { fixture?: string; ticketsCmd?: string[]; plannedCmd?: string[]; cls?: string; extra?: object }
+interface SetupOpts { fixture?: string; ticketsCmd?: string[]; plannedCmd?: string[]; diffsCmd?: string[]; matchCmd?: string[]; cls?: string; extra?: object }
 
-function makeSetup({ fixture = "demo", ticketsCmd, plannedCmd, cls = "release-review@0.2.1", extra = {} }: SetupOpts = {}) {
+function makeSetup({ fixture = "demo", ticketsCmd, plannedCmd, diffsCmd, matchCmd, cls = "release-review@0.3.0", extra = {} }: SetupOpts = {}) {
   const d = tmp();
   const cmd = (cap) => ({ cmd: [NODE, join(FIX, "fake_binding.js"), join(FIX, fixture), cap, "{release}"] });
-  const b = Object.fromEntries(["planned_tickets", "tickets", "release_changes"].map((c) => [c, cmd(c)]));
+  const b = Object.fromEntries(["planned_tickets", "tickets", "release_changes", "change_diffs"].map((c) => [c, cmd(c)]));
   if (ticketsCmd) b.tickets = { cmd: ticketsCmd };
   if (plannedCmd) b.planned_tickets = { cmd: plannedCmd };
-  b.change_matches_ticket = { cmd: [NODE, join(FIX, "fake_match.js")] };
+  if (diffsCmd) b.change_diffs = { cmd: diffsCmd };
+  b.change_matches_ticket = { cmd: matchCmd ?? [NODE, join(FIX, "fake_match.js")] };
   const setup = { name: "demo", class: cls, fix_version: "{release}", bindings: b,
     status_map: { "Ready for QA Release": "awaiting_qa", "In QA": "in_qa", Ready: "todo", Closed: "done" },
     expected_states: ["awaiting_qa", "in_qa"], report_dir: join(d, "out"), signoff: "someone", ...extra };
@@ -66,6 +67,43 @@ describe("cli run", () => {
 
   test("testEmptyReleaseSkipsTickets", () => {
     assert.equal(runDemo({ fixture: "empty", ticketsCmd: FAIL }).rc, 0);
+  });
+
+  test("the function sees each judged change's diff", () => {
+    // "matches" only when every change arrives with the fixture's diff.
+    const matchCmd = [NODE, "-e", `const d = JSON.parse(require("node:fs").readFileSync(0, "utf8"));
+      const ok = d.changes.every((c) => typeof c.diff === "string" && c.diff.startsWith("--- a/"));
+      console.log(JSON.stringify({ verdict: ok ? "matches" : "unclear", reason: "diff check" }));`];
+    const r = runDemo({ matchCmd });
+    assert.equal(r.rc, 0, r.err);
+    const verdicts = reportJson(r.dir).verdicts;
+    assert.ok(verdicts.length > 0);
+    assert.deepEqual(verdicts.filter((v) => v.verdict !== "matches"), []);
+  });
+
+  test("change_diffs is asked only for the changes the function judges", () => {
+    const d = tmp();
+    const seen = join(d, "ids.json");
+    const diffsCmd = [NODE, "-e", `const fs = require("node:fs"); const ids = JSON.parse(fs.readFileSync(0, "utf8"));
+      fs.writeFileSync(${JSON.stringify(seen)}, JSON.stringify(ids));
+      console.log(JSON.stringify(ids.map((id) => ({ id, diff: "--- a/x" }))));`];
+    assert.equal(runDemo({ diffsCmd }).rc, 0);
+    const ids = JSON.parse(readFileSync(seen, "utf8"));
+    // !8 and c9 name no ticket, so no pair holds them.
+    assert.ok(!ids.includes("!8") && !ids.includes("c9"), ids.join(","));
+    assert.ok(ids.includes("!1") && ids.includes("c2"));
+    assert.equal(new Set(ids).size, ids.length);
+  });
+
+  test("a change with no diff stops the run and writes no report", () => {
+    const r = runDemo({ diffsCmd: [NODE, "-e", "console.log('[]')"] });
+    assert.equal(r.rc, 2);
+    assert.match(r.err, /change_diffs: no diff for/);
+    assert.ok(!existsSync(r.dir));
+  });
+
+  test("an empty release never calls change_diffs", () => {
+    assert.equal(runDemo({ fixture: "empty", ticketsCmd: FAIL, diffsCmd: FAIL }).rc, 0);
   });
 
   test("testBindingFailureWritesNoReport", () => {
@@ -128,7 +166,7 @@ describe("cli check-setup", () => {
     const [s] = makeSetup();
     const r = cli(["check-setup", "--setup", s, "--release", "demo-1.0"]);
     assert.equal(r.rc, 0, r.err);
-    for (const cap of ["planned_tickets", "release_changes", "tickets"]) assert.match(r.out, new RegExp(`ok ${cap}`));
+    for (const cap of ["planned_tickets", "release_changes", "tickets", "change_diffs"]) assert.match(r.out, new RegExp(`ok ${cap}`));
     assert.match(r.out, /not called change_matches_ticket/);
   });
 
@@ -176,7 +214,7 @@ describe("cli conformance", () => {
     const res = JSON.parse(r.out);
     assert.deepEqual(res.team_cases.hard_misses, ["t1"]);
     assert.equal(res.team_cases.n, 1);
-    assert.equal(res.class_cases.n, 16);
+    assert.equal(res.class_cases.n, 19);
     assert.equal(r.rc, 1);
   });
 

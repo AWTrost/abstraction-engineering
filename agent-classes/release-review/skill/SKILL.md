@@ -29,7 +29,7 @@ This class only reviews. Run the review above, show the gaps, and stop. Tell the
 ## Set up a team
 
 1. Copy `node_modules/@agent-class/release-review/setup.example.json` to the path the user picks, outside any shared repo if it names hosts or projects.
-2. Write one read-only command per capability with the user. The contract is in `node_modules/@agent-class/release-review/class.json`: `capabilities.<name>.output` is the JSON shape each command prints, `{release}` in an argv is replaced by the release id, and `tickets` gets a JSON list of keys on stdin. Use the user's own CLIs, so the class runs with their auth.
+2. Write one read-only command per capability with the user. The contract is in `node_modules/@agent-class/release-review/class.json`: `capabilities.<name>.output` is the JSON shape each command prints, `{release}` in an argv is replaced by the release id, `tickets` gets a JSON list of keys on stdin, and `change_diffs` gets a JSON list of change ids and prints each one's code diff. Use the user's own CLIs, so the class runs with their auth.
 3. Bind `change_matches_ticket` to `{"model": "<name>"}` (the user's `claude`) or to a `cmd` that reads `{ticket, changes}` on stdin and prints `{verdict, reason}`.
 4. Run `npx --no release-review check-setup --setup <path> --release <id>` and fix what it names. Done when it exits 0.
 5. Scoring the fuzzy binding spends money: run `npx --no release-review conformance --setup <path>` only when the user asks. A setup may name its own held-out cases in `conformance_cases`.

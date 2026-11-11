@@ -4,15 +4,15 @@ import { describe, test } from "node:test";
 import { modelArgv, parseModelOutput } from "../src/runtime/typed-function.ts";
 import * as fuzzy from "../src/release-review/match.ts";
 import { loadClass } from "../src/release-review/paths.ts";
-import type { Change, Ticket } from "../src/release-review/types.ts";
+import type { JudgedChange, Ticket } from "../src/release-review/types.ts";
 import { FIX, NODE } from "./helpers.ts";
 
 const SCHEMA = loadClass().functions.change_matches_ticket.output;
 const FAKE = { cmd: [NODE, join(FIX, "fake_match.js")] };
 // The tests pass only the fields the code under test reads.
 const asTicket = (o): Ticket => o;
-const asChange = (o): Change => o;
-const inputs = (key = "DEMO-1") => ({ ticket: asTicket({ key, summary: "s", description: "d" }), changes: [asChange({ title: "t", description: "d" })] });
+const asChange = (o): JudgedChange => o;
+const inputs = (key = "DEMO-1") => ({ ticket: asTicket({ key, summary: "s", description: "d" }), changes: [asChange({ title: "t", description: "d", diff: "+x" })] });
 const node = (code) => ({ cmd: [NODE, "-e", code] });
 
 describe("fuzzy", () => {
@@ -26,13 +26,21 @@ describe("fuzzy", () => {
 
   test("testTruncatesAndFlags", () => {
     const long = asTicket({ key: "DEMO-2", summary: "s", description: "x".repeat(5000) });
-    const change = asChange({ title: "t", description: "y".repeat(5000) });
+    const change = asChange({ title: "t", description: "y".repeat(5000), diff: "z".repeat(25_000) });
     let [out, cut] = fuzzy.payload(long, [change]);
     assert.equal(out.ticket.description.length, fuzzy.CAP);
     assert.equal(out.changes[0].description.length, fuzzy.CAP);
+    assert.equal(out.changes[0].diff.length, fuzzy.DIFF_CAP);
     assert.ok(cut);
     assert.equal(long.description.length, 5000); // input untouched
     [, cut] = fuzzy.payload(inputs().ticket, inputs().changes);
+    assert.equal(cut, false);
+  });
+
+  test("testDiffReachesPayloadUncutUnderItsCap", () => {
+    // A diff longer than the text cap but under its own is passed whole.
+    const [out, cut] = fuzzy.payload(inputs().ticket, [asChange({ title: "t", description: "d", diff: "z".repeat(5000) })]);
+    assert.equal(out.changes[0].diff.length, 5000);
     assert.equal(cut, false);
   });
 

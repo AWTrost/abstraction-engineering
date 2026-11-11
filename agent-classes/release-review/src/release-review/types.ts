@@ -22,6 +22,10 @@ export interface Change {
   ticket_keys: string[];
 }
 
+/** A change with its code diff: what change_matches_ticket judges. */
+export interface JudgedChange extends Change { diff: string }
+export interface ChangeDiff { id: string; diff: string }
+
 export type GapKind = "empty_release" | "shipped_not_planned" | "planned_not_shipped" | "change_without_ticket"
   | "unknown_ticket" | "unexpected_status" | "unmapped_status";
 
@@ -47,13 +51,14 @@ export interface EarlierWork { key: string; fix_versions: string[] }
 export interface Case {
   id: string;
   ticket: Ticket;
-  changes: Change[];
+  changes: JudgedChange[];
   expected: Verdict;
 }
 
 export interface RRSetup extends Setup {
   fix_version: string;
-  bindings: { planned_tickets: CmdBinding; tickets: CmdBinding; release_changes: CmdBinding; change_matches_ticket: Binding };
+  bindings: { planned_tickets: CmdBinding; tickets: CmdBinding; release_changes: CmdBinding; change_diffs: CmdBinding;
+    change_matches_ticket: Binding };
   status_map: Record<string, State>;
   expected_states: State[];
   report_dir: string;

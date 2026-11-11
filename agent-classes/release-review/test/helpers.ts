@@ -10,12 +10,13 @@ export const tmp = () => mkdtempSync(join(tmpdir(), "rr-"));
 
 export const GOOD = {
   name: "demo",
-  class: "release-review@0.2.1",
+  class: "release-review@0.3.0",
   fix_version: "{release}",
   bindings: {
     planned_tickets: { cmd: ["x"] },
     tickets: { cmd: ["x"] },
     release_changes: { cmd: ["x"] },
+    change_diffs: { cmd: ["x"] },
     change_matches_ticket: { model: "sonnet" },
   },
   status_map: { Ready: "todo" },
@@ -32,7 +33,7 @@ export function writeSetup(data) {
 
 export function fakeSetup(fixture = "demo") {
   const bindings = {};
-  for (const cap of ["planned_tickets", "tickets", "release_changes"]) {
+  for (const cap of ["planned_tickets", "tickets", "release_changes", "change_diffs"]) {
     bindings[cap] = { cmd: [NODE, join(FIX, "fake_binding.js"), join(FIX, fixture), cap, "{release}"] };
   }
   return { bindings };

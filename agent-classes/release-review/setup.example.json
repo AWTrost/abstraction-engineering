@@ -1,11 +1,12 @@
 {
   "name": "my-team",
-  "class": "release-review@0.2.1",
+  "class": "release-review@0.3.0",
   "fix_version": "{release}",
   "bindings": {
     "planned_tickets": {"cmd": ["node", "bindings/tickets.js", "planned", "{release}"]},
     "tickets": {"cmd": ["node", "bindings/tickets.js", "keys"]},
     "release_changes": {"cmd": ["node", "bindings/changes.js", "{release}"]},
+    "change_diffs": {"cmd": ["node", "bindings/changes.js", "diffs"]},
     "change_matches_ticket": {"model": "haiku"}
   },
   "status_map": {
