@@ -1,17 +1,12 @@
 # @agent-class/release-review
 
-An agent-class: a shared, versioned process that a team installs with npm and binds to its own systems through a setup file. This one compares a release's planned tickets with the changes that shipped and writes a gap report for a person to sign off. It reads; it never writes to the tracker or the code host.
+An agent-class: a shared, versioned process that a team installs as an npm package and binds to its own systems through a setup file. This one compares a release's planned tickets with the changes that shipped and writes a gap report for a person to sign off. It reads; it never writes to the tracker or the code host.
 
 The program drives and the model fills one typed function. Everything exact (the joins, the gap rules, the report) is code. The one judgement code cannot make, whether a ticket's changes do what it asks, is `change_matches_ticket`, and a setup binds it to a model or a command.
 
-## Install
+## Using it
 
-The package is installed from a git tag, not a registry:
-
-    npm i -D "git+ssh://git@github.com/AWTrost/abstraction-engineering.git#release-review-v<version>"
-    npx --no release-review install-skill
-
-The tag points at a commit holding only this folder (see Releasing), because npm cannot install a subfolder of a repo. The lockfile pins the commit. `install-skill` links `.claude/skills/release-review` to the skill in `node_modules`, so the skill follows upgrades; with `--copy`, or where a link cannot be made, it copies and you re-run it after each upgrade. An agent other than Claude Code reads `node_modules/@agent-class/release-review/skill/SKILL.md`.
+This copy is here to show the code; it is not published or released from this repo. In use, a team installs the class as a pinned dev dependency and runs `npx --no release-review install-skill`, which links `.claude/skills/release-review` to the skill in `node_modules`, so the skill follows upgrades. With `--copy`, or where a link cannot be made, it copies, and you re-run it after each upgrade. An agent other than Claude Code reads `node_modules/@agent-class/release-review/skill/SKILL.md`.
 
 Use `npx --no`: the name `release-review` is not reserved on the public registry, and plain `npx` would fetch a public package of that name when this one is missing. `package.json` is `private` so it cannot be published there by mistake.
 
@@ -67,10 +62,6 @@ The source is TypeScript in `src/`, in two halves:
 
 Unit tests never call a model. The fixtures are JSON and small Node commands in `test/fixtures/`.
 
-## Releasing
+## Versions
 
-From the repo root, with the change merged:
-
-    git tag release-review-v<version> "$(git subtree split --prefix agent-classes/release-review)"
-
-Install by the tag, never by the split's bare commit id: git does not fetch a commit no ref reaches, so `#<sha>` fails with "unknown git error". Push the tag only with the owner's go. Bump `version` in `package.json` and `class.json` together; a change to what a setup or binding may contain is a new version.
+Bump `version` in `package.json` and `class.json` together; a change to what a setup or binding may contain is a new version. Versions are released from the class's private home repo, not from here.
