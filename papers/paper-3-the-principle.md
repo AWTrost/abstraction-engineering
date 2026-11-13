@@ -4,7 +4,7 @@ Nov 12, 2026 · draft, first version · written by a model at Adam's request, as
 
 This is a draft of a third paper. Paper 1 describes one way to build a thing, the agent-class, and the paper 2 material holds notes on what running it showed. This paper tries to state the principle underneath with no build in it: no package, no language, and no need for the word "class". If the principle is sound, a team could follow it with different tools.
 
-A model wrote this draft in one session, from paper 1, the paper 2 material and a review of paper 1. It reports no new run. Every figure in it comes from paper 1. Adam has commented on it and has not yet rewritten it, so nothing here is his claim until he does.
+A model wrote this draft in one session, from paper 1, the paper 2 material and a review of paper 1. It reports no new run. Every figure in it comes from paper 1. Adam reviewed it and directed its changes. It is still a draft.
 
 ## The principle
 
