@@ -63,7 +63,7 @@ What is left after compiling is the part code cannot do. The principle asks for 
 
 Inside those rules, a judgement can be small or large. The smallest kind is about one item, sees only its declared input, and has no tools and no memory. That is the kind paper 1 built. A larger kind could run a long prompt, call tools, read the memory of the harness it runs in, or start other agents. It would take a long time, and the program around it would wait for the answer the way it waits for a person to sign off. It would still be a judgement, because the program knows what it asked and what shape comes back. Nothing in the papers has built one. That is a statement about what has been tried, not about what can work.
 
-**This is wider than paper 1.** Paper 1 says the model fills one function per item, with no tools and no memory, and that the shape does not fit a judgement that needs several items at once. It states those as what a class is. This draft treats them as the small end of a dial. Paper 1 hedges its limit as argued and not shown, so the two do not flatly disagree, but a reader of both will notice. One of them should change to match the other.
+**Paper 1 built the small end.** Its class fills one function per item, with no tools and no memory. It says a fuzzy function could do more, and that none that does has been built. This draft says the same of judgements, and adds what turning the dial up costs.
 
 Size is a dial, and turning it up has a price. A small judgement is easier to check, in four ways:
 

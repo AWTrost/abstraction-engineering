@@ -14,7 +14,7 @@ This third version follows a review of the second on 2026-11-12. The reviewer wa
 - **Why now.** Agents make the individual pieces of work cheap. Writing the code is no longer the scarce part.
 - **What a class holds.** Steps written as code, the capabilities it needs ("fetch this release's tickets"), typed functions with no body (called fuzzy functions below) for the judgements that cannot be written as code ahead of time, the shape of its output, and conformance tests.
 - **What setup supplies.** The commands that fill each capability, the binding for each typed function (a model or a command), the house rules, and the class version it is pinned to. The person running the class supplies the per-run values.
-- **What it is not.** A class is not an agent loop with fewer pieces. A run has no loop. The code decides every step, and the model fills one typed function per item, with no tools and no memory. The agent's open-ended work does not go away. It moves to building the class and to setting it up.
+- **What it is not.** A class is not an agent loop with fewer pieces. The code decides the steps of a run, and the model does not. In the built class, the model fills one typed function per item, with no tools and no memory. A fuzzy function could do more than that, up to a loop of its own inside the one function, and none that does has been built. In the built class, the agent's open-ended work does not go away. It moves to building the class and to setting it up.
 - **Where a class comes from.** The first time a piece of work is done, nobody knows the process, and a long agent session finds it. A session discovers a process, and a class is what that process is compiled into.
 - **What is new versus harness engineering.** Harness engineering steers agents with instructions given before they act and checks run after. It sketches templates to share them across teams. Classes add declared capabilities, bound at setup, so a team depends on a versioned class instead of copying and editing it.
 - **What exists.** One class, built in Python and then ported to an npm package. The scored runs that called a model cost $0.08 to $0.14 each. It was scored against two long hand-run sessions, on seven findings per release that it could in principle report. On release B it reported 3 of the 7 outright. On release A it scored 0 of 7 as briefed, for a setup reason, and 1 of 7 after a corrected window. It also raised false gaps: six on release A and five on release B. The caveats are in the worked example.
@@ -36,7 +36,11 @@ The build sharpened one part of the claim. A class does not hand the work to an 
 
 The claim is narrow on purpose. A class pays off when work repeats, outlives a session, runs in parallel, carries stakes, or changes hands. A one-off task in one sitting needs no class.
 
-A class also needs two things from the work itself. The order of the steps must be known before the run. The judgements must be few enough to list, and each must be answerable for one item at a time. Where the next step depends on what the last one found, as in debugging, research or incident triage, the agent loop stays. No such work has been tried as a class, so this limit is argued and not shown.
+A class pays off most when the work has two more properties. The order of the steps is known before the run, and the judgements are few enough to list.
+
+The built class goes further. Each of its judgements is about one item, with no tools and no memory. That is the smallest kind of fuzzy function, and it is not the only kind. A fuzzy function could do anything a model can do, such as calling tools or judging many items at once. It would be harder to test and to cache, and none has been built. So the small kind is where to start. It is not a limit on what a class can hold.
+
+Where the next step depends on what the last one found, as in debugging, research or incident triage, there are few exact steps to write as code, so a class buys less. A contract and its tests may still be worth having for such work. No such work has been tried as a class. That is a statement about what has been tried, not about what can work.
 
 One more limit comes from the review. A plain script with one schema-checked model call is the baseline, and scripts are older than agents. No such script was measured, but nothing in the cost result in this paper depends on more than that. What a class adds to it is what lets teams share the script: declared capabilities, bindings, a pin and conformance tests. That part is the claim, and it has the least evidence.
 
@@ -144,7 +148,7 @@ The first version drew this table in the abstract. This is the table the built c
 
 **Setup is checked when it is made.** The npm port has a command that validates a setup file against the contract and calls each capability once. A team proves its bindings before the first real run, the way a constructor rejects bad arguments.
 
-**An agent's place moves to setup time.** The port has no agent binding kind yet. Instead, its skill tells a coding agent how to write a command binding for a new team, once, and prove it with that check. The agent's open-ended work happens when the class is set up. The run itself has none.
+**An agent's place moves to setup time.** The port has no agent binding kind yet. Instead, its skill tells a coding agent how to write a command binding for a new team, once, and prove it with that check. The agent's open-ended work happens when the class is set up. A run of the built class has none.
 
 Declared capabilities make a class portable across tools. The prompt side is less portable. The same instructions act differently on another model, so each model needs the conformance check above. The build ran it on two models from one vendor, and under no other coding agent.
 
@@ -152,24 +156,24 @@ Memory is one more capability. A class declares a store the way it declares anyt
 
 ## The program drives, the model fills functions
 
-A fuzzy step is a typed function with no body. The class declares its signature and output schema. Setup binds it.
+A fuzzy function is a typed function with no body. The class declares its signature and output schema. Setup binds it.
 
 ```js
 /** Does this change do what its ticket asked? */
 async function changeMatchesTicket(ticket, changes): {verdict, reason}  // no body
 ```
 
-The verdict is one of `matches`, `partial`, `unrelated` or `unclear`. A model binding runs the class's own prompt as a one-shot call with a JSON schema, and reads the result from the structured output. A command binding gets the same input and prints the result. If the call fails, times out, or returns output that does not match the schema, the verdict is `unclear`. The caller never handles an exception.
+The verdict is one of `matches`, `partial`, `unrelated` or `unclear`. In the built class, a model binding runs the class's own prompt as a one-shot call with a JSON schema, and reads the result from the structured output. A command binding gets the same input and prints the result. If the call fails, times out, or returns output that does not match the schema, the verdict is `unclear`. The caller never handles an exception.
 
-**The call must strip the runner's own agent configuration.** This is the coding agent's configuration on the runner's machine. It is not the class's setup. A plain one-shot call to a coding agent loads all of it: instructions, hooks, skills and tool servers. A three-word call to a small model cost $0.149 that way. With the tools, settings and tool servers switched off, the same call cost $0.0011. That is what the configuration costs on every call. It is not how much cheaper a real call gets, because a real call also carries a ticket and its changes. The stripped call is also the right shape. A function should see only its inputs, and no house context should leak into it.
+**The call must strip the runner's own agent configuration.** This is the coding agent's configuration on the runner's machine. It is not the class's setup. A plain one-shot call to a coding agent loads all of it: instructions, hooks, skills and tool servers. A three-word call to a small model cost $0.149 that way. With the tools, settings and tool servers switched off, the same call cost $0.0011. That is what the configuration costs on every call. It is not how much cheaper a real call gets, because a real call also carries a ticket and its changes. The stripped call is also the right shape for a small function. It should see only its inputs. Whatever a larger function might be given on purpose, such as tools, the runner's own configuration should not leak into it by accident.
 
 **The runner's own provider and auth.** The class runs with the provider and authentication of whoever runs it, and takes only the inputs its contract declares. One catch turned up. The stripped call ignores provider settings kept in the coding agent's own config file. A provider must be configured in the shell, or the model binding never reaches it. The package's documentation and its failure message now say so.
 
 **One small call per item is enough for now.** The class calls the function once for each ticket that was both planned and shipped. The scored runs that called a model cost between $0.08 and $0.14 with a mid-size model. Batching or caching for cost can wait until a release is large enough to need it. Caching for stable answers is a separate matter, covered above. The class makes its calls one after another today. Each call depends on no other call, so they could run side by side, go to a batch interface, or be skipped on a re-run when an item has not changed. The paper 2 material lists these as ideas to test.
 
-**Not an agent loop.** My first summary was that a class recreates a very simple agent loop with only the pieces it needs. The build showed something sharper. In an agent loop, the model decides the next step. In a class, the code decides every step, and the model fills one typed function per item, with no tools and no memory, schema-checked. A real loop comes back only where a step needs open-ended exploration. That would be an agent binding for one capability, or the shape where an agent drives and calls scripts for the exact parts. That second shape may be more powerful. It is harder to test, and it is a later version.
+**Not an agent loop.** My first summary was that a class recreates a very simple agent loop with only the pieces it needs. The build showed something sharper. In an agent loop, the model decides the next step. In a class, the code decides the steps of the run. In the built class, the model fills one typed function per item, with no tools and no memory, schema-checked. A real loop comes back only where a step needs open-ended exploration. There are three shapes for that. One is an agent binding for one capability. One is a fuzzy function that runs a loop of its own, with tools, inside the one function. In both of those the code still drives, and the loop stays inside one step. The third is the shape where an agent drives and calls scripts for the exact parts. That shape may be more powerful. All three are harder to test, and none is built.
 
-**An event-loop reading.** A JavaScript programmer would see the same split. The event loop is the part that must be exact, and replacing it with an agent goes against the principle. The useful version is the inversion: the program is the runtime, and the model fills some function bodies. A human gate is an awaited promise. A failed handoff with nowhere to go is an unhandled rejection, which is the dead-letter question under Open questions.
+**An event-loop reading.** A JavaScript programmer would see the same split. The event loop is the part that must be exact, and replacing it with an agent goes against the principle. A loop inside one function body is a different thing, and leaves the event loop exact. The useful version is the inversion: the program is the runtime, and the model fills some function bodies. A human gate is an awaited promise. A failed handoff with nowhere to go is an unhandled rejection, which is the dead-letter question under Open questions.
 
 ## Pinning
 
@@ -398,7 +402,7 @@ I read the harness engineering article, every factor of 12-Factor Agents and the
 
 - **Composition.** Is a team's extra check an override, an added step, or a second class? Can one class use another, such as a release review that calls a proofreader? Nothing built so far answers this.
 - **Run inputs.** Which values does a class declare as per-run, and how does a binding receive them? The design fills them into the binding's arguments.
-- **Where an agent belongs.** Today an agent writes bindings at setup. When does a capability need an agent at run time, and how is that binding tested? One answer to try: if the contract and its tests are the class, then an agent loop that passes them is a valid way to run it. Better models would then change what fills a class, not whether to have one.
+- **Where an agent belongs.** Today an agent writes bindings at setup. When does a capability need an agent at run time, and how is that binding tested? The same question holds for a fuzzy function that runs a loop of its own. One answer to try: if the contract and its tests are the class, then an agent loop that passes them is a valid way to run it. That would give up the exact steps and keep the contract. Better models would then change what fills a class, not whether to have one.
 - **The smallest class format** that works across coding agents. JSON Schema in one file worked for one class under one coding agent.
 - **Failed handoffs.** A dead-letter channel, where undeliverable messages go, asks where a failed handoff goes. The class stops the run and writes nothing, which is one answer.
 - **Structured briefs.** Do handoff briefs with named fields beat prose ones?
@@ -437,7 +441,7 @@ The release review has a shape. Code joins two or more lists. A model judges one
 
 Two of these would test open questions here. Audit evidence is work many organisations share while their tools differ, which is the second-team test. Action items after an incident could reuse the release review's own fuzzy function, which tests composition and the rule of three.
 
-The shape does not fit work where the next thing to fetch depends on the last result, or where a judgement needs several items at once. It also does not fit a process that changes faster than a team re-pins.
+The shape fits less well where the next thing to fetch depends on the last result, or where a judgement needs several items at once. Such work might still be done with a larger fuzzy function, at a cost in what can be tested. None has been tried. A process that changes faster than a team re-pins is also a poor fit.
 
 ## The second paper: classes in action
 
