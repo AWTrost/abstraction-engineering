@@ -1,10 +1,10 @@
 # Compile what the session found: the principle apart from the build
 
-Nov 12, 2026, with a section added Nov 13 · draft, first version · written by a model at Adam's request, as a thought experiment
+Nov 12, 2026, with additions on Nov 13 · draft, first version · written by a model at Adam's request, as a thought experiment
 
 This is a draft of a third paper. Paper 1 describes one way to build a thing, the agent-class, and the paper 2 material holds notes on what running it showed. This paper tries to state the principle underneath with no build in it: no package, no language, and no need for the word "class". If the principle is sound, a team could follow it with different tools.
 
-A model wrote this draft in one session, from paper 1, the paper 2 material and a review of paper 1. It reports no new run. Every figure in it comes from paper 1. Adam reviewed it and directed its changes. A later session added the section "An idea to test: compile the steps into the contract". It is still a draft.
+A model wrote this draft in one session, from paper 1, the paper 2 material and a review of paper 1. It reports no new run. Every figure in it comes from paper 1. Adam reviewed it and directed its changes. On Nov 13 a later session added the section "An idea to test: compile the steps into the contract", brought in paper 1's new build cost, and fixed what two cold reads found. Adam has not settled on the added idea. It is still a draft.
 
 ## The principle
 
@@ -13,7 +13,7 @@ A model wrote this draft in one session, from paper 1, the paper 2 material and 
 3. The model keeps only the judgements that can be listed.
 4. The contract and its tests are the thing that is shared.
 
-The next four sections take each line in turn. Each says what the line means, what paper 1 shows for it, and what would count against it. The sections after those cover an idea to test, the main objection, what compiling loses, when it buys little, and what rests on what.
+The next four sections take each line in turn. Each says what the line means, what paper 1 shows for it, and what would count against it. The sections after those cover an idea to test, the main objection, what compiling loses, when it buys little, what rests on what, and what was not checked.
 
 Lines 2 and 4 buy different things, and a team can have one without the other. Line 2 buys low cost and the same steps every time. Line 4 buys something to test and something to hand over. This matters later, for work whose steps cannot be written down.
 
@@ -102,22 +102,18 @@ This matters for one argument against the whole idea: that models will get good 
 
 This section is an idea, not part of the principle. It came out of a later model session and Adam's discussion of it. Adam has not settled on it, and no run tests it.
 
-Line 2 compiles the exact steps into code, and line 4 shares the contract around that code. The idea moves the compiled form up one level. The steps are compiled into the contract, its tests and the shape of the setup. Code becomes one way to run the contract, not the thing that is shared.
-
-In this form:
+Section 4 already says that what runs behind the contract is free to change. The idea goes further. Line 2 compiles the exact steps into code. Under the idea, the steps are compiled into the contract, its tests and the shape of the setup, and code is only one way to run them. If the idea held, line 2 would change to say so. It adds four things that section 4 does not say:
 
 - **The class's home keeps** the contract, the tests, the shape of the setup, and one reference implementation in one language.
 - **A team whose repo uses another language** may write or generate its own implementation and keep it in its own repo. It counts as the class if it passes the tests at the pinned contract version.
 - **A team's own facts**, such as its ticket fields and status names, go in its setup file, which the contract declares and checks. They do not go into the implementation's code. Then a team can regenerate its implementation when the contract changes without losing them.
-- **The pin names** the contract version, the model id and the tool version. The code is not pinned. It has to pass again whenever it changes.
+- **The pin changes meaning.** Paper 1's pin covers the class's code and contract, and leaves out the model and the tool. Under the idea, the pin names the contract version, the model id and the tool version, and the code is not pinned. Code has to pass again whenever it changes.
 
 **Why it might be worth it.** Code is cheap to write now, so tying a class to one language may cost more than it saves. A team could take up a class without adding a language to its repo.
 
-**Why it might not be.** Each implementation is one more thing to keep up, and every contract change has to reach all of them. The idea is only as safe as the tests. Paper 1's review found a binding that gave a wrong answer in the right shape and passed every test. Tests can fix the result of the exact steps closely, with known cases. For a judgement they can only bound how often the costly wrong answer comes back. So for the judgements, "the same output" means "within the bound".
+**Why it might not be.** Each implementation is one more thing to keep up, and every contract change has to reach all of them. The idea is only as safe as the tests, and section 4 gives the case where a wrong binding passed them all. Tests can fix the result of the exact steps closely, with known cases. For a judgement they can only bound how often the costly wrong answer comes back. So for the judgements, "the same output" means "within the bound".
 
-**How the tests would be checked.** Tests catch what someone thought to test. To catch the rest, run each new implementation and the reference on the same real past inputs, and compare the results. A difference means the tests missed something.
-
-**What would test the idea.** Generate a second implementation from the contract file alone, in another language, with no sight of the reference. Run both on a past piece of work and count the differences, and how many of them the tests missed. This is test 2 under "What rests on what". Paper 1's one case of two implementations does not count, because the second was a translation of the first.
+**How it would be checked, and tested.** Tests catch what someone thought to test. To catch the rest, run each new implementation and the reference on the same real past inputs, and compare the results. A difference means the tests missed something. The first such run is the test of the idea: an implementation generated from the contract file alone, in another language, with no sight of the reference. That is test 2 under "What rests on what". Section 4 says why paper 1's two implementations do not count.
 
 ## Why not a session every time?
 
@@ -157,11 +153,12 @@ Two things follow. Both are ideas, with no run behind them.
 
 ## What rests on what
 
-The principle is stated here without a build, and it has no evidence of its own. What evidence there is comes from one compiled process, from one team, and paper 1 lists its limits. Three things would test the principle apart from that build:
+The principle is stated here without a build, and it has no evidence of its own. What evidence there is comes from one compiled process, from one team, and paper 1 lists its limits. Four things would test the principle apart from that build:
 
 1. A second compiled process, for different work, built by following the four lines and not by copying the first.
 2. One contract run two ways that share no code, with the results compared.
 3. One piece of work where compiling was tried and given up, with the reason.
+4. Several fresh sessions on one piece of repeated work, compared with each other and with the compiled process, as "Why not a session every time?" describes.
 
 Paper 1 is then one way to follow the principle: a class, a setup, bindings and a pin. The second paper will be about how such a thing learns. This paper is meant to be readable first, though all of its evidence is in paper 1.
 
