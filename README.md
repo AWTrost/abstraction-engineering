@@ -1,6 +1,6 @@
 # Abstraction engineering
 
-Agents make individual pieces of work cheap: code, reviews, research. The engineering moves into designing the shared, reusable process that work comes from, the way a developer designs a class instead of writing the same script again.
+Agents make individual pieces of work cheap: code, reviews, research. The engineering moves into designing the shared, reusable process that work comes from, the way a developer designs a class instead of writing the same script again. A long agent session discovers a process, and a class is what that process is compiled into.
 
 This repo holds the papers on that idea and the one class built to test it.
 
@@ -31,4 +31,4 @@ The repo is the idea plus one worked example. It is not a library of classes; it
 
 ## Status
 
-This is a working paper and a proof of concept: one class, one team, one runtime. Paper 1 lists what the evidence does and does not show.
+This is a working paper and a proof of concept: one class, one team, one coding agent. Paper 1 lists what the evidence does and does not show.

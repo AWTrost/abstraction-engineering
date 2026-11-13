@@ -1,20 +1,24 @@
 # Abstraction engineering: classes for agent work
 
-Nov 9, 2026 · Adam · second version
+Nov 12, 2026 · Adam · third version
 
 The first of two papers. This one is about classes in the abstract: the shared process that agent work comes from. The second, classes in action, covers how a class learns: memory, promotion, and the evidence for them.
 
-The first version was a design paper. This version rests on a build. On 2026-11-09 I built one class, bound it to a fixture setup and to one team's real setup, ran it live, and scored it against long hand-run sessions whose work included the same step. The build confirmed the main split and broke several of my assumptions about the domain. Each is reported here. Where this version says "the first version", it means the original paper of Nov 8.
+The first version was a design paper. The second version, of Nov 9, rests on a build. On 2026-11-09 I built one class, bound it to a fixture setup and to one team's real setup, ran it live, and scored it against long hand-run sessions whose work included the same step. The build confirmed the main split and broke several of my assumptions about the domain. Each is reported here. Where this paper says "the first version", it means the original paper of Nov 8.
+
+This third version follows a review of the second on 2026-11-12. The reviewer was a larger model from the same vendor as the models that built the class, in a session with no part in the build. The review added no run. It narrowed the claim, moved several claims under "It weakens or qualifies", and named prior art I have not read yet. Text that comes from the review says so. Figures from version 0.3.0 of the class come from the paper 2 material or from the class's files in this repo.
 
 ## The 30-second version
 
 - **What it is.** Abstraction engineering is designing the shared, reusable process that agent work comes from, the way a developer designs a class instead of writing the same script again. The design principle is object-oriented design.
 - **Why now.** Agents make the individual pieces of work cheap. Writing the code is no longer the scarce part.
-- **What a class holds.** Steps written as code, the capabilities it needs ("fetch this release's tickets"), typed functions with no body for the judgements only a model can make, the shape of its output, and conformance tests.
+- **What a class holds.** Steps written as code, the capabilities it needs ("fetch this release's tickets"), typed functions with no body for the judgements that cannot be written as code ahead of time, the shape of its output, and conformance tests.
 - **What setup supplies.** The commands that fill each capability, the binding for each typed function (a model or a command), the house rules, and the class version it is pinned to. The person running the class supplies the per-run values.
-- **What it is not.** A class is not an agent loop with fewer pieces. It replaces the loop. The code decides every step, and the model fills one typed function per item, with no tools and no memory.
+- **What it is not.** A class is not an agent loop with fewer pieces. A run has no loop. The code decides every step, and the model fills one typed function per item, with no tools and no memory. The agent's open-ended work does not go away. It moves to building the class and to setting it up.
+- **Where a class comes from.** The first time a piece of work is done, nobody knows the process, and a long agent session finds it. A session discovers a process, and a class is what that process is compiled into.
 - **What is new versus harness engineering.** Harness engineering steers agents with instructions given before they act and checks run after. It sketches templates to share them across teams. Classes add declared capabilities, bound at setup, so a team depends on a versioned class instead of copying and editing it.
-- **What exists.** One class, built in Python and then ported to an npm package. It costs about 10 cents a run in model calls. Against two long hand-run sessions, it reported 3 of 7 recorded findings outright on one release. On the other it scored 0 of 7 as briefed, for a setup reason, and 1 of 7 after a corrected window. The caveats are in the worked example.
+- **What exists.** One class, built in Python and then ported to an npm package. The runs scored here cost $0.08 to $0.14 each in model calls. Against two long hand-run sessions, it reported 3 of 7 recorded findings outright on one release. On the other it scored 0 of 7 as briefed, for a setup reason, and 1 of 7 after a corrected window. It also raised false gaps: six on the first release and five on the second. The caveats are in the worked example.
+- **What the evidence does not reach.** A plain script with one model call would get the same cost result. What a class adds to that script is the sharing, and the sharing has been tried on one team.
 
 ## The claim
 
@@ -22,13 +26,19 @@ Agents make instances cheap: code, reviews, research. The engineering has been r
 
 In plain words: the mechanics are now the easy part, whether that means writing the code, running a review or configuring a tool. The hard part is everything beyond the mechanics, as it always was. It means deciding what to build, how the pieces fit, and how the work gets checked and shared. A class captures that part, so it is designed once and reused.
 
-"Refactored" is meant literally. A refactor keeps behaviour and changes structure. The behaviour here, shipping working software, stays the same. What moves is where the engineering lives: out of each piece of work and into the class it comes from.
+"Refactored" names a direction. It is not meant literally. A refactor keeps behaviour and changes structure. At the level of a whole team, the behaviour, shipping working software, stays the same, but that is true of any change in practice, so it tests nothing. At the level of one process, behaviour did not stay the same: the built class did not report everything the hand-run sessions found (see the worked example). What the word keeps is where the engineering lives. It moves out of each piece of work and into the class the work comes from.
 
-Every step up in programming traded direct control for leverage: from machine code to languages, to frameworks, and now to agents. Each step also moved the design work up a level. At this step, the design work is the class.
+Every step up in programming traded direct control for leverage: from machine code to languages, to frameworks, and now to agents. Each step also moved the design work up a level. A class is not one more step in that direction. It takes control back from the agent and puts it in code.
+
+The two fit together like this. The first time a piece of work is done, nobody knows the process. A long agent session makes it up as it goes, and that is the right tool for the job. Once the answer is known, the steps that turned out to be exact can be written as code. Nobody knew those steps existed before the session. So a session discovers a process, and a class is what that process is compiled into. The design work at this step is deciding what to compile, and where the model still has to judge.
 
 The build sharpened one part of the claim. A class does not hand the work to an agent. It hands the agent's judgement to a function. The program runs the process, and the model is called only where a judgement cannot be written as code. The aim is to make a non-deterministic model behave like a function with a fixed contract. The shape of each answer is checked and fixed. The answer itself is not, which is why the next version is planned to cache answers and measure how often they flip.
 
 The claim is narrow on purpose. A class pays off when work repeats, outlives a session, runs in parallel, carries stakes, or changes hands. A one-off task in one sitting needs no class.
+
+A class also needs two things from the work itself. The order of the steps must be known before the run. The judgements must be few enough to list, and each must be answerable for one item at a time. Where the next step depends on what the last one found, as in debugging, research or incident triage, the agent loop stays. No such work has been tried as a class, so this limit is argued and not shown.
+
+One more limit comes from the review. A plain script with one schema-checked model call is the baseline, and scripts are older than agents. The cost result in this paper belongs to that baseline. What a class adds to it is what lets teams share the script: declared capabilities, bindings, a pin and conformance tests. That part is the claim, and it has the least evidence.
 
 ## Words used here
 
@@ -41,7 +51,7 @@ The claim is narrow on purpose. A class pays off when work repeats, outlives a s
 - **Instance state.** One instance's own state: where it stands, what is next, what happened. It lives as long as the task, across sessions, and closes with it. (My own setup keeps it in a "work note".)
 - **Capability.** Something a class needs without caring who provides it, such as "fetch the tickets for this release". In ports-and-adapters terms, a port.
 - **Binding.** What fills a capability at setup. In the built class it is a command that prints JSON. In ports-and-adapters terms, an adapter.
-- **Fuzzy function.** A typed function with no body, declared by the class with its input and output schema. Setup binds it to a model or to a plain command.
+- **Fuzzy function.** A typed function with no body, declared by the class with its input and output schema. Setup binds it to a model or to a plain command. The class's code calls it a typed function.
 - **Conformance test.** A test any binding must pass to be valid. It is the Liskov check (see below).
 - **Gate.** A point where a human decides, such as merging a change or signing off a release.
 
@@ -53,7 +63,7 @@ Abstraction engineering builds on harness engineering, as Birgitta Böckeler des
 
 Each team keeps its own model, context and harness, plus a small config. Harness engineering, itself one form of context engineering, builds each team's harness. Abstraction engineering builds the class above them that every team depends on.
 
-When an issue recurs, harness engineering has a person improve the controls. The article also sketches a next step, harness templates: bundles of guides and sensors for common kinds of service. It names their weak point too. Once a team copies a template, it drifts from upstream improvements. A class answers that drift. A template bundles concrete guides and sensors. A class declares what it needs, and setup supplies it. Teams then depend on one versioned class instead of copying and editing it.
+When an issue recurs, harness engineering has a person improve the controls. The article also sketches a next step, harness templates: bundles of guides and sensors for common kinds of service. It names their weak point too. Once a team copies a template, it drifts from upstream improvements. A class answers that drift for the process. A template bundles concrete guides and sensors. A class declares what it needs, and setup supplies it. Teams then depend on one versioned class instead of copying and editing it. The drift does not all go away. Some of it moves to the bindings: the paper 2 material records bindings copied between two repos, with fixes ported by hand.
 
 The article also lists what an agent lacks: "no social accountability, no aesthetic disgust at a 300-line function, no intuition that 'we don't do it that way here,' and no organisational memory." Classes partly answer two of these. A class's written conventions, checked by a reviewer, cover known matters of taste but not new ones. A class's gates put accountability on a named human. Memory and "we don't do it that way here" belong to the second paper.
 
@@ -78,7 +88,13 @@ Read it left to right. The runtime builds each instance from the class and the s
 
 The split between constructor and method arguments came from the build. I first treated every value as setup. One per-run value, which code branches a release covers, ended up guessed by a binding and then patched in a setup file. A value that changes every run belongs to the person running it. A value that is the same for every run belongs to setup.
 
-The analogy is a teaching aid, not a spec, and it strains at memory. Short-lived instances need nothing always running. Each piece of work starts, does its job and ends. What persists is the class, its setup, each open task's state, and whatever store a class binds for memory.
+The analogy is a teaching aid, not a spec, and it strains in three places.
+
+- **At the word "instance".** In object-oriented code, a class plus its constructor arguments makes an object. By the table above, that object is one team's bound setup. One run of it is then a method call, and a stack frame belongs to a call. This paper's "instance" is that call and the work it produces. It is not the object. I keep the word, because "agents make instances cheap" is about pieces of work. The cost is one gap. State shared across the runs of one setup, such as a cache of verdicts or a memory store, is the object's own state, and the table has no row for it. The second paper needs that row.
+- **At "abstract method".** A subclass fills an abstract method. Here setup injects the body, the same way it injects a capability's command, so the two rows describe one mechanism. With a model binding, the class also still owns half the body, its prompt. Setup names only the model.
+- **At memory.** Short-lived instances need nothing always running. Each piece of work starts, does its job and ends. What persists is the class, its setup, each open task's state, and whatever store a class binds for memory.
+
+The build used no inheritance. What it used from object-oriented design is interfaces, injected dependencies and packaging.
 
 ### SOLID, mapped onto classes
 
@@ -86,8 +102,8 @@ The principles of object-oriented design carry over with little change.
 
 | Principle | In a class for agent work |
 |---|---|
-| Single responsibility | Each agent does one job and holds only that job's permissions. The worked example starts with such a split. |
-| Open/closed | A team extends a class through setup (its bindings, status names, house rules), not by editing a copy. |
+| Single responsibility | Each class does one job. For an agent the matching rule is least privilege: it holds only its job's permissions. The worked example starts with such a split of agents. |
+| Open/closed | A team extends a class through setup (its bindings, status names, house rules), not by editing a copy. That held for values. A missing input needed a new class version (0.3.0, in the paper 2 material). |
 | Liskov substitution | Any binding for a capability or a fuzzy function must pass the class's tests. That includes a model. |
 | Interface segregation | Small ports, such as "fetch the tickets for this release", not one big port per tracker. |
 | Dependency inversion | The class depends on capabilities, and setup injects the commands. |
@@ -100,7 +116,11 @@ The principles of object-oriented design carry over with little change.
 
 The build also swapped the class's own implementation. The same release, run by the Python class and by the npm port with the fuzzy function bound to a constant command, gave the same gaps, counts and verdicts. Both were written by the same model family.
 
+**Passing the tests is necessary, not sufficient.** Liskov substitution is about meaning, and the class's tests check meaning for only one kind of binding. For a capability, they check the shape of the output and nothing else. The binding that gave release A's wrong window (in the worked example) printed JSON of the right shape, so no test of the class could have caught it. Only the fuzzy function has a test of meaning, the conformance set. A capability needs one as well: a past release with a known answer, kept by the team and run through its real bindings. That is not built.
+
 A model is a strange thing to hold to Liskov, because it can pass a case once and fail it the next time. The shape of its output is checked by schema on every call. The verdict inside it is not stable. So the next version is planned to cache each verdict by a hash of its exact inputs, so a re-run on the same release gives the same report. It would also measure how often each conformance case flips over several runs. A substitution test for a non-deterministic binding needs a rate, not a single pass.
+
+A cache alone would hide that rate from the person reading the report. A verdict that flips often would look as settled as one that never flips. So a report should carry how far several samples agreed, and not only the first answer.
 
 ## What a class declares, what setup supplies
 
@@ -124,7 +144,7 @@ The first version drew this table in the abstract. This is the table the built c
 
 **An agent's place moves to setup time.** The port has no agent binding kind yet. Instead, its skill tells a coding agent how to write a command binding for a new team, once, and prove it with that check. The agent's open-ended work happens when the class is set up. The run itself has none.
 
-Declared capabilities make a class portable across tools. The prompt side is less portable. The same instructions act differently on another model, so each model needs the conformance check above. The build ran it on two models from one vendor, and on no other runtime.
+Declared capabilities make a class portable across tools. The prompt side is less portable. The same instructions act differently on another model, so each model needs the conformance check above. The build ran it on two models from one vendor, and under no other coding agent.
 
 Memory is one more capability. A class declares a store the way it declares anything else, and setup binds it. How a class learns into that store, and how the store stays true, is the subject of the second paper.
 
@@ -139,11 +159,11 @@ async function changeMatchesTicket(ticket, changes): {verdict, reason}  // no bo
 
 The verdict is one of `matches`, `partial`, `unrelated` or `unclear`. A model binding runs the class's own prompt as a one-shot call with a JSON schema, and reads the result from the structured output. A command binding gets the same input and prints the result. If the call fails, times out, or returns output that does not match the schema, the verdict is `unclear`. The caller never handles an exception.
 
-**The call must strip the runner's setup.** A plain one-shot call to a coding agent loads the user's whole setup: instructions, hooks, skills and tool servers. A three-word call to a small model cost $0.149 that way. With the tools, settings and tool servers switched off, the same call cost $0.0011. The stripped call is also the right shape. A function should see only its inputs, and no house context should leak into it.
+**The call must strip the runner's own agent configuration.** This is the coding agent's configuration on the runner's machine. It is not the class's setup. A plain one-shot call to a coding agent loads all of it: instructions, hooks, skills and tool servers. A three-word call to a small model cost $0.149 that way. With the tools, settings and tool servers switched off, the same call cost $0.0011. That is what the configuration costs on every call. It is not how much cheaper a real call gets, because a real call also carries a ticket and its changes. The stripped call is also the right shape. A function should see only its inputs, and no house context should leak into it.
 
 **The runner's own provider and auth.** The class runs with the provider and authentication of whoever runs it, and takes only the inputs its contract declares. One catch turned up. The stripped call ignores provider settings kept in the coding agent's own config file. A provider must be configured in the shell, or the model binding never reaches it. The package's documentation and its failure message now say so.
 
-**One small call per item is enough for now.** The class calls the function once for each ticket that was both planned and shipped. A live run cost between $0.08 and $0.14 with a mid-size model. Batching or caching can wait until a release is large enough to need it.
+**One small call per item is enough for now.** The class calls the function once for each ticket that was both planned and shipped. A live run cost between $0.08 and $0.14 with a mid-size model. Batching or caching can wait until a release is large enough to need it. The class makes its calls one after another today. Each call depends on no other call, so they could run side by side, go to a batch interface, or be skipped on a re-run when an item has not changed. The paper 2 material lists these as ideas to test.
 
 **Not an agent loop.** My first summary was that a class recreates a very simple agent loop with only the pieces it needs. The build showed something sharper. In an agent loop, the model decides the next step. In a class, the code decides every step, and the model fills one typed function per item, with no tools and no memory, schema-checked. A real loop comes back only where a step needs open-ended exploration. That would be an agent binding for one capability, or the shape where an agent drives and calls scripts for the exact parts. That second shape may be more powerful. It is harder to test, and it is a later version.
 
@@ -156,6 +176,8 @@ The first version said a team should "depend on a versioned class" and gave no w
 The class is an npm package installed from a git tag. npm resolves the tag, and the lockfile pins the exact commit. A setup names the version it was written for, such as `release-review@0.2.0`. The class refuses to run a setup pinned to another version, and names both. So a class change never silently reinterprets an old setup. Updating is a deliberate re-pin, not whatever is on the main branch.
 
 The pin is fixed when the class is set up, and every run uses it until someone re-pins.
+
+**What the pin does not cover.** The review found this. The pin covers the class's code and contract. It does not cover the two parts most likely to change under it. A setup binds the fuzzy function to a model name, and the example setup in this repo uses a short alias. A vendor can point an alias at a newer model. Every verdict could then change with no new class version and no re-pin. The coding agent's command-line tool, which makes the call, is not pinned either, and the stripped call depends on how its flags behave. So "a class change never silently reinterprets an old setup" is true, and a model change still can. A setup should name a dated model id, and each report should record the exact model and tool version that produced it. Neither is built.
 
 One detail cost time. npm cannot install a package from a subfolder of a git repo. It ignores the syntax for a subfolder and installs the repo root, with no error. So each release is a tag on a split commit that holds only the class's folder.
 
@@ -209,6 +231,10 @@ The class never writes to the tracker or to the code host. Its five states (to d
 - **The class's own rules leaked the domain too.** The class lists "earlier work" apart from gaps: a done ticket that carries another release's fix version. But fix versions are opaque to the class, so it cannot tell earlier from later. Tickets stamped for a later release, or for a hotfix, were listed as earlier work.
 - **A rule assumed when the review runs.** The setup names which states a shipped ticket should be in at review time. That fits a review at hand-off. On a release reviewed weeks later, every ticket had moved on, and the rule gave false alarms.
 
+The review found a fourth leak, by reading the class and not from a run.
+
+- **The class's own words name one kind of tracker.** The prompt says "Jira ticket". A gap message says "MR". The setup has a field for a fix version. The test for real names does not catch these, because they are a vendor's vocabulary and not the team's names. A team whose tracker has no fix versions would meet this before anything else.
+
 The lesson is about where a port ends. A port can carry an opaque id across the line. It cannot ask the binding to derive facts from that id that only a person knows. When I guessed the branches from the fix version, the guess was subtly wrong in ways no test caught. When I had to fix one run, the fix was a per-run value smuggled into a setup file. The design now has the person running the class name the branches as run inputs, which setup declares and fills into the binding's arguments. That is designed and not yet built. An order of fix versions, for earlier work, would come from setup. That is also not built.
 
 **Scored against long hand-run sessions.** Before the release skills existed, two of this team's releases were each reviewed in one long session or a pair of sessions. Their work notes record what each session found when it reconciled planned against shipped. I wrote those findings down as ground truth, committed them, and then ran the class on both releases. Each release had seven findings the class could in principle report.
@@ -222,6 +248,13 @@ The labels mean this. A hit is a finding the class reported under the matching g
 | B | 3 hits, 1 partial, 2 matching by kind only, 1 missed because the ticket moved since | $0.14 | $10.26 |
 
 Beyond the ground truth, the class found one real new gap on each release, and two false ones on B. It also raised false gaps on tickets the ground truth already covered: six on A and three on B. Four of these nine came from one binding defect: some merge requests label their ticket line differently, and the binding read only one label. The other five were status gaps.
+
+Two things follow about what the table measures.
+
+- **It shows what was found, not how much of the report was right.** Release B's 3 hits came with 5 false gaps: the two new ones and the three on covered tickets. Release A came with 6. A person signing off has to read through those.
+- **It scores the code, not the model.** Every hit is a gap kind, and the join code computes the gap kinds. The fuzzy function's verdicts are no part of this score.
+
+The seven findings per release are the ones the class could report. This paper does not give how many findings the sessions recorded in all. So the table says nothing about what a session finds that a class cannot.
 
 On human effort, release B is the fair point. The session took 3 typed messages and 81 words to reach its first hand-off list. The class takes one command and a sign-off. Release A's count measures mostly code review and skill building, so it is not comparable.
 
@@ -248,13 +281,19 @@ The session's cost up to the hand-off list is not known exactly, because the tok
 
 The two costs have different shapes:
 - **The session.** Each call re-read the conversation so far, about 71,000 tokens a call up to the hand-off list, nearly all from the cache. The conversation held the agent's setup, the skill's text and every tracker and git result.
-- **The class.** Each call starts with the user's setup stripped and sees only the prompt, one ticket and its changes. The tracker and git work is code, so it costs no tokens.
+- **The class.** Each call starts with the runner's agent configuration stripped and sees only the prompt, one ticket and its changes. The tracker and git work is code, so it costs no tokens.
 
 So an agent's cost should grow with its turns, each costing more as the context fills, while the class's grows with the number of tickets. One release cannot show the growth itself.
 
 The class column is the class run from a shell. Run by an agent through its skill, the class costs more, about three times as much on the one release where both were run (below).
 
 **The fuzzy function, scored.** The conformance set has 16 ticket and change pairs with known verdicts. A model passes at 80% correct. It also fails on any hard miss: a `partial` or `unrelated` case answered `matches`, because that error hides a gap, while the others only add noise. The 80% bar is a placeholder. A small model scored 16 of 16 for about a cent. A mid-size model scored 15 of 16, and its one miss was soft. The same agent wrote the cases and the prompt, so I reviewed the cases and decided the borderline ones myself. They are still not held out.
+
+The review added three limits to these scores.
+
+- **The set is too small to certify much.** With no misses in 16 cases, the true accuracy could still be as low as about 83%. That is the 95% bound, worked out as 0.05 to the power 1/16. The set in this repo, at 0.3.0, has 19 cases, and 10 of them expect `partial` or `unrelated`. No hard miss in 10 cases still allows a hard-miss rate of up to about 26%, worked out the same way as 1 minus 0.05 to the power 1/10. The hard miss is the error the class cares about most, and the set cannot rule it out.
+- **Version 0.2.0 judged text, not code.** Its function saw each change's title and description and no diff. The paper 2 material tells how a later run showed that. So these scores, and every live verdict in this paper, compare a ticket with what a commit message says.
+- **The function has not been scored on live data.** The paper 2 material records live runs where 29 of 29 and 8 of 8 verdicts were `matches`, and nobody scored them. A function that always answers `matches` would print the same. The conformance set is the only evidence so far that the function can tell a gap from a match.
 
 **A smaller example: a proofreader.** A cold-read proofreading agent splits the same way. The class fixes how it reads: once, with no prior context, contradictions and seams first, report only. Each setup adds its house rules, such as a workplace style guide, and binds where the text comes from. Its closure binding is the one described above, and it is merged.
 
@@ -276,7 +315,9 @@ The class column is the class run from a shell. Run by an agent through its skil
 **Not built or not shown:**
 
 - **One user, one class, one team's setup.** Sharing across people and teams is untested. A second real setup with no class edits is the next test.
-- **One runtime, one vendor.** The class ran from Claude Code and a shell. The two models scored are from the same vendor.
+- **One coding agent, one vendor.** The class ran from Claude Code and a shell. The two models scored are from the same vendor.
+- **No build cost.** This paper gives the cost of a run and not the cost of building the class. Without it there is no break-even point: the build cost divided by what one run saves.
+- **No work where a class does not fit.** The step was chosen because it fit. Nothing built shows where the pattern stops.
 - **Run inputs** for the per-run branches, and an order of fix versions, are designed and not built.
 - **Stable answers** for the fuzzy function, by cache and flip rate, are planned and not built.
 - **No agent binding kind.** An agent writes bindings at setup, but no capability is filled by an agent at run time.
@@ -286,10 +327,10 @@ The class column is the class run from a shell. Run by an agent through its skil
 
 **It supports:**
 
-- **The exact/fuzzy split holds.** Almost all of the work was code, and the one judgement cost cents per release. The hand-run sessions cost $10 and $58, but those are upper bounds that include other work, so the comparison is not like for like. Counted only up to the hand-off list, release B's session still made 19 model calls and used 1.34 million tokens, against 8 calls and $0.14 for the class.
+- **The exact/fuzzy split holds, on a step picked for it.** Almost all of the work was code, and the one judgement cost cents per release. By line count, the class's source in this repo is 884 lines, and the two files that call the model are 89 of them. The hand-run sessions cost $10 and $58, but those are upper bounds that include other work, so the comparison is not like for like. Counted only up to the hand-off list, release B's session still made 19 model calls and used 1.34 million tokens, against 8 calls and $0.14 for the class. The class's tokens were not recorded, so that is a direction and not a ratio. The step was chosen because its exact part was most of the work. The split is confirmed where it was expected, not in general.
 - **The class/setup split holds at the smallest scale.** A fixture setup and one real setup bound the class with no change to its code. A fixture is a test double, not a second team. A fresh agent ran the class knowing only the contract.
-- **The contract is the class, not the code.** Two implementations in two languages gave the same report on a real release, with the fuzzy function held constant.
-- **Pinning is cheap once a class is a package.** npm and a lockfile already do it.
+- **The tests fix the report, whatever the language.** Two implementations in two languages gave the same report on a real release, with the fuzzy function held constant. The second version read this as "the contract is the class, not the code". That is more than it shows, because the port carried the first implementation's tests across. An implementation written from the contract file alone would test the stronger claim.
+- **The pinning mechanism is cheap once a class is a package.** npm and a lockfile already do it. Running it was not free. The paper 2 material lists what it met: a tag on a split commit, squash merges, a package name open on the public registry, and one repo's install scripts.
 
 **It weakens or qualifies:**
 
@@ -297,6 +338,17 @@ The class column is the class run from a shell. Run by an agent through its skil
 - **A class can fail silently and look complete.** The worst result, 0 of 7, came with no error. The class's own guard, a gap for an empty release, did not fire, because the wrong window was small, not empty.
 - **Evidence for the class's value is thin.** Two releases, drifted tracker state, a ground truth that may not be blind, and one model family on both sides of the scoring.
 - **A model held to Liskov needs a rate.** One pass on a conformance set says little about the next run.
+
+The review of 2026-11-12 added these.
+
+- **The supported part is not the new part.** The cost result belongs to a script with one model call. The part a class adds, sharing through capabilities, bindings, a pin and conformance, rests on one team.
+- **The Liskov check tests shape, not meaning, for capabilities.** A binding can pass every test and still be wrong, and one was.
+- **The fuzzy function is the least tested part.** Its scores come from 16 cases written with its prompt, on a version that saw no code, and it has no score on live data.
+- **The pin leaves the model unpinned.** A model alias can change every verdict with no new version.
+- **"Refactored" is not literal.** The class did not reproduce the sessions' findings.
+- **Drift moves, it does not vanish.** Bindings were copied between two repos and fixed by hand in each.
+- **The class names one kind of tracker in its own text.** That is a fourth domain leak.
+- **The report carries false gaps.** Release B's 3 hits came with 5 of them.
 
 ## Prior art and credits
 
@@ -315,6 +367,18 @@ I read the harness engineering article, every factor of 12-Factor Agents and the
 | Context engineering (term popularized by Tobi Lütke and Andrej Karpathy, June 2025; summary by Philipp Schmid) | The system that assembles what each model call sees, including memory and tools | How the process that makes those calls is shared and bound |
 | DSPy signatures and Marvin's AI functions | A typed function whose body a model supplies | Not yet read against this paper, and the closest prior art to the fuzzy function. Until it is read, the novelty claim above is provisional. |
 
+**Raised in review, not yet read.** The review of 2026-11-12 named these as close prior art. The reviewer described them from memory. I have not read any of them against this paper, so each row is a lead to check, not a finding. Like the DSPy row, they keep the novelty claim provisional.
+
+| Source | Why the review called it close |
+|---|---|
+| Workflow engines, such as Temporal and Dagster | A fixed program that calls out to bound resources, with a step that waits for a person |
+| Reusable CI workflows, such as GitHub Actions reusable workflows and GitLab CI components | A shared, versioned process with declared inputs, pinned by commit |
+| Compatibility test kits, such as the Java TCK and the Kubernetes conformance suite | Tests that any implementation of an interface must pass |
+| Record linkage, after Fellegi and Sunter | Exact blocking, a fuzzy match on each pair, and a band of pairs sent to a clerk. It has long-standing methods for error rates |
+| BAML, Instructor and TypeChat | A typed, schema-checked model call |
+| Compound AI systems (Berkeley AI Research, 2024) | A name for a program with model calls inside it |
+| Inter-rater reliability, such as Cohen's kappa | An existing measure for how often two readings of one item agree, which is what a flip rate is |
+
 **Borrowed ideas.**
 
 - Object-oriented design: classes, constructors, abstract methods, and the SOLID principles, with Barbara Liskov's substitution principle as the conformance test.
@@ -329,22 +393,46 @@ I read the harness engineering article, every factor of 12-Factor Agents and the
 
 - **Composition.** Is a team's extra check an override, an added step, or a second class? Can one class use another, such as a release review that calls a proofreader? Nothing built so far answers this.
 - **Run inputs.** Which values does a class declare as per-run, and how does a binding receive them? The design fills them into the binding's arguments.
-- **Where an agent belongs.** Today an agent writes bindings at setup. When does a capability need an agent at run time, and how is that binding tested?
-- **The smallest class format** that works across runtimes. JSON Schema in one file worked for one class on one runtime.
+- **Where an agent belongs.** Today an agent writes bindings at setup. When does a capability need an agent at run time, and how is that binding tested? One answer to try: if the contract and its tests are the class, then an agent loop that passes them is a valid way to run it. Better models would then change what fills a class, not whether to have one.
+- **The smallest class format** that works across coding agents. JSON Schema in one file worked for one class under one coding agent.
 - **Failed handoffs.** A dead-letter channel, where undeliverable messages go, asks where a failed handoff goes. The class stops the run and writes nothing, which is one answer.
 - **Structured briefs.** Do handoff briefs with named fields beat prose ones?
 
 ## Questions for the thesis
 
-The thesis rests on one user, one class and one runtime. These are the questions that decide whether it holds beyond that.
+The thesis rests on one user, one class and one coding agent. These are the questions that decide whether it holds beyond that.
 
 1. **Does the class/setup split survive a second team?** A second real setup, bound with no edits to the class, is the test. The domain leaks found so far suggest the first draft of any port will need changes.
-2. **Does a class stay valid on another model and another runtime?** So far it has run on two models from one vendor and one coding agent. The Liskov claim needs a different vendor and a different runtime.
+2. **Does a class stay valid on another model and under another coding agent?** So far it has run on two models from one vendor and one coding agent. The Liskov claim needs a different vendor and a different coding agent.
 3. **Is a class worth more than a good session?** The comparison is two releases, scored by the same model family that built the class, against drifted state. A held-out ground truth, scored by someone else, on a release reviewed at hand-off time, would be a fair test.
 4. **Can a non-deterministic function honour a fixed contract?** Caching gives the same report on a re-run. It does not make the first answer right. The flip rate will show how far a model binding is from a function.
 5. **Where does the line between port and binding go, in general?** One rule from today is that a port may carry an opaque id but not ask a binding to infer facts a person knows. It is one data point.
 6. **Do classes compose?** A thesis about classes needs at least one class that uses another.
 7. **Does the rule of three hold for the class runtime itself?** A shared library for typed model calls waits for three classes. Only one exists.
+8. **What does a class add to a script with one model call?** The answer on offer is sharing. A second team, and the build cost set against the runs it saves, would test it.
+9. **Where does a class not fit?** One piece of work tried as a class and given up would mark the edge. So would a rule that says in advance which work fits.
+10. **Can the fuzzy function tell a gap from a match on live data?** Live verdicts scored by a person would show it. So would real tickets paired on purpose with the wrong changes.
+
+## Where else the shape may fit
+
+This section is from the review and rests on no run. It is a list of places to try a class, not a result.
+
+The release review has a shape. Code joins two or more lists. A model judges one item at a time against a fixed question. One kind of wrong answer costs far more than the others. A person already signs off the result. Other work has the same shape.
+
+| Work | The exact part | The fuzzy function | The costly error |
+|---|---|---|---|
+| Audit evidence for a security standard | join each control to its evidence | does this evidence satisfy this control? | accepting weak evidence |
+| Invoice, order and receipt matching | the three-way join and the totals | are these two lines the same goods? | paying a mismatch |
+| Contract review against a house playbook | split into clauses, walk the checklist | does this clause conform? | passing a clause that deviates |
+| Triage of static-analysis and vulnerability findings | join each finding to its code | does this finding apply here? | dismissing a real one |
+| Screening papers for a systematic review | remove duplicates, list the criteria | include or exclude this abstract? | excluding a relevant study |
+| Translation checks | placeholders and lengths | does the meaning survive? | passing a wrong meaning |
+| Action items after an incident | join each action to its ticket and change | did this change do the action? | closing an action nobody did |
+| Documentation drift | join each documented command to its code | does this paragraph still describe this code? | passing a stale page |
+
+Two of these would test open questions here. Audit evidence is work many organisations share while their tools differ, which is the second-team test. Action items after an incident could reuse the release review's own fuzzy function, which tests composition and the rule of three.
+
+The shape does not fit work where the next thing to fetch depends on the last result, or where a judgement needs several items at once. It also does not fit a process that changes faster than a team re-pins.
 
 ## The second paper: classes in action
 
