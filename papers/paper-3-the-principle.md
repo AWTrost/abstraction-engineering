@@ -65,7 +65,7 @@ Size is a dial, and turning it up has a price. A small judgement can be checked 
 - **It can be given to a smaller model.**
 - **Nothing leaks in.** A judgement that reads a harness's memory answers differently for two people, and neither can see why.
 
-So the line is to list the judgements and keep each as small as the work allows. The model still does not decide the process. When one judgement grows until it is choosing its own steps for most of the work, the result is a session with a typed answer at the end. That may be the right design for some work. It has given up most of what compiling buys. That is a trade, not a failure.
+So there are two separate points. A judgement can do anything a model can do, and the principle sets no limit on that. And a large judgement is not the recommended way to write one: start small, and make it larger only when a small one cannot answer the question. The line is to list the judgements and keep each as small as the work allows. The model still does not decide the process. When one judgement grows until it is choosing its own steps for most of the work, the result is a session with a typed answer at the end. That may be the right design for some work. It has given up most of what compiling buys. That is a trade, not a failure.
 
 **What paper 1 shows.** One judgement, "does this change do what its ticket asked?", was enough for the built example. It scored 16 of 16 on a small set of cases. The review of paper 1 worked out that 16 of 16 still allows a true accuracy as low as about 83%, and that the judgement has no score on live data. So this line has the least evidence of the four.
 
