@@ -2,7 +2,7 @@
 
 This is a draft of a third paper. Paper 1 describes one way to build a thing, the agent-class, and the paper 2 material holds notes on what running it showed. This paper tries to state the principle underneath with no build in it: no package, no language, and no need for the word "class". If the principle is sound, a team could follow it with different tools.
 
-A model wrote this draft at Adam's request, as a thought experiment, in one session, from paper 1, the paper 2 material and a review of paper 1. It reports no new run. Every figure in it comes from paper 1. Adam reviewed it and directed its changes. A later session added the section "An idea to test: compile the steps into the contract", brought in paper 1's new build cost, and fixed what two cold reads found. Adam has not settled on the added idea. It is still a draft.
+It reports no new run. Every figure in it comes from paper 1. It is still a draft.
 
 ## The principle
 
@@ -98,7 +98,7 @@ This matters for one argument against the whole idea: that models will get good 
 
 ## An idea to test: compile the steps into the contract
 
-This section is an idea, not part of the principle. It came out of a later model session and Adam's discussion of it. Adam has not settled on it, and no run tests it.
+This section is an idea, not part of the principle. It is not settled, and no run tests it.
 
 Section 4 already says that what runs behind the contract is free to change. The idea goes further. Line 2 compiles the exact steps into code. Under the idea, the steps are compiled into the contract, its tests and the shape of the setup, and code is only one way to run them. If the idea held, line 2 would change to say so. It adds four things that section 4 does not say:
 
@@ -147,7 +147,7 @@ Two things follow. Both are ideas, with no run behind them.
 - **The work has been done fewer than three times.** Stay with a session.
 - **The next step depends on what the last one found**, as in debugging or research. There are no exact steps to compile, so line 2 buys nothing. Line 4 may still be worth having, as one large judgement with a contract around it. Nobody has tried.
 - **The process changes faster than a team would update what it shares.**
-- **Building it costs more than it will save.** The break-even point is the build cost divided by what one run saves. For the one example that exists, paper 1 works it out as seven runs at the earliest: about $64 of build work after the first hand-run sessions, against at most $10.12 saved a run on one release. That rests on one class and one release, and the build cost leaves out Adam's own time.
+- **Building it costs more than it will save.** The break-even point is the build cost divided by what one run saves. For the one example that exists, paper 1 works it out as seven runs at the earliest: about $64 of build work after the first hand-run sessions, against at most $10.12 saved a run on one release. That rests on one class and one release, and the build cost leaves out the author's own time.
 
 ## What rests on what
 

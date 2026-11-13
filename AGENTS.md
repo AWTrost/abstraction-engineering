@@ -6,7 +6,7 @@ The papers on abstraction engineering (designing the shared, versioned process t
 
 - `papers/paper-1-classes-in-the-abstract.md`: paper 1, classes in the abstract. It is a finished, versioned text: the date and version are on line 3, and "the first version" in the text means the Nov 8 original and "the second version" the Nov 9 text.
 - `papers/paper-2-material.md`: notes toward paper 2, classes in action. They are not a finished text. Each item is an observation from a run, except the section "Where the model sits", which holds ideas, each with what would test it.
-- `papers/paper-3-the-principle.md`: a draft of paper 3, the principle with no build in it. A model wrote it as a thought experiment. The owner has reviewed it and directed its changes, and it has had a cold read. It reports no run, and its figures all come from paper 1; keep it that way.
+- `papers/paper-3-the-principle.md`: a draft of paper 3, the principle with no build in it. The owner has reviewed it, and it has had cold reads. It reports no run, and its figures all come from paper 1; keep it that way.
 - `agent-classes/`: the agent-classes, one folder each; its `README.md` lists them.
 - `agent-classes/release-review/`: the release-review agent-class as an npm package. This is a showcase copy. The class is developed and released from a private repo, and each version is ported here once it is released there, with no work content. Don't develop the class here first. Its `README.md` has the contract, commands and known limits; `class.json` is the contract in JSON Schema. A new agent-class goes in its own folder under `agent-classes/`.
 - `README.md`: what a visitor reads first.
