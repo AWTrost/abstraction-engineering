@@ -22,7 +22,7 @@ Terms from paper 1 keep their meaning. These are added.
 - **Session.** One long piece of work between a person and an agent, where the agent decides the next step as it goes.
 - **Process.** The steps a piece of work takes, in order, with what each step needs and produces.
 - **Exact step.** A step that code can do the same way every time, such as joining two lists.
-- **Judgement.** A question about one item that code written in advance cannot answer, with a fixed set of possible answers. Paper 1 builds a judgement as a fuzzy function.
+- **Judgement.** A question that code written in advance cannot answer, with a declared input and a fixed shape of answer. Paper 1 builds a judgement as a fuzzy function.
 - **Compile.** To turn a process that a session found into a program that runs it with no session. The word is borrowed. Nothing here is a compiler.
 - **Contract.** What the compiled process needs, what it returns, and what each judgement may answer.
 - **Fall back.** To stop the compiled process and hand the work to a person or a session, saying why.
@@ -51,20 +51,25 @@ Those runtimes have one more habit worth copying. When compiled code meets a cas
 
 ## 3. The model keeps only the judgements that can be listed
 
-What is left after compiling is the part code cannot do. The principle asks for that part to be a short list of judgements, each of one fixed kind:
+What is left after compiling is the part code cannot do. The principle asks for that part to be a list of judgements. Two things make something a judgement, and both are required:
 
-- It is about one item at a time.
-- It has a fixed set of answers, and one of them means "not enough to judge".
-- It sees only what it is given. It has no tools and no memory.
+- It has a declared input and a fixed shape of answer, and one possible answer means "not enough to judge".
 - The costly wrong answer is known, so a test can count it.
 
-A judgement of this kind can be checked. It can be scored against cases with known answers. It can be given to a smaller model. It can be asked several times to see how often the answer changes. None of that is possible for a decision buried in the middle of a session.
+Inside those two rules, a judgement can be small or large. The smallest kind is about one item, sees only what it is given, and has no tools and no memory. That is the kind paper 1 built. A larger kind could run a long prompt, call tools, read the memory of the harness it runs in, or start other agents. It would take a long time, and the program around it would wait for the answer the way it waits for a person to sign off. It would still be a judgement, because the program knows what it asked and what shape comes back. Nothing in the papers has built one. That is a statement about what has been tried, not about what can work.
 
-The limit is plain. Some work needs a judgement about many items at once, or a judgement about what to fetch next. That is not on the list, and it cannot be put there. Work like that has not been compiled, whatever the program around it looks like.
+Size is a dial, and turning it up has a price. A small judgement can be checked in ways a large one cannot:
+
+- **Its answer depends only on its input.** So the same input can be answered from a cache, and a test case is just an input and an expected answer. A judgement that calls tools also depends on what the tools return that day. Testing it needs a fixed world to run in, not just a fixed input.
+- **It can be asked several times cheaply**, to see how often the answer changes.
+- **It can be given to a smaller model.**
+- **Nothing leaks in.** A judgement that reads a harness's memory answers differently for two people, and neither can see why.
+
+So the line is to list the judgements and keep each as small as the work allows. The model still does not decide the process. When one judgement grows until it is choosing its own steps for most of the work, the result is a session with a typed answer at the end. That may be the right design for some work. It has given up most of what compiling buys. That is a trade, not a failure.
 
 **What paper 1 shows.** One judgement, "does this change do what its ticket asked?", was enough for the built example. It scored 16 of 16 on a small set of cases. The review of paper 1 worked out that 16 of 16 still allows a true accuracy as low as about 83%, and that the judgement has no score on live data. So this line has the least evidence of the four.
 
-**What would count against it.** A compiled process whose judgements keep growing in number or in the context they need, until each one is a small session. That would mean the work was not ready to compile.
+**What would count against it.** Work where the judgements cannot be listed at all, because each run needs a different question. A judgement that grows large does not count against the line. A judgement that nobody can write a test for does.
 
 ## 4. The contract and its tests are the thing that is shared
 
@@ -92,7 +97,7 @@ A larger model does not settle that, because it helps both sides. It makes the s
 What a session every time does not give, at any model size, is this:
 
 - **The same process twice.** Two sessions on the same work may take different steps and check different things. Nobody knows which, short of reading both transcripts.
-- **Something to test.** A session has no contract. The only check on it is a person reading its result, each time.
+- **Something to test.** A session has no contract. The only check on it is a person reading its result, each time. A compiled process fits the checks a team already runs on code. It has an exit status. Its exact steps have tests that need no model, so they can run on every change. Its judgements have a scored set of cases that can run when the prompt or the model changes, and fail the build below a bar. Paper 1's example does the first two, and this repo runs those tests on every pull request. Scoring the judgement in a pipeline is not built. For a team that already trusts a pipeline more than a transcript, this may be the plainest reason to compile.
 - **Something to hand over.** A teammate gets either your result or a session of their own, which may not do what yours did.
 - **A run with nobody there.** A session needs a person to start it and to answer it. A compiled process can run on a schedule.
 - **A lower cost.** This is the weakest of the five. Paper 2's material already says that while tokens are cheap, people spend them to save their own time.
@@ -113,8 +118,7 @@ Two things follow. Both are ideas, with no run behind them.
 ## When not to compile
 
 - The work has been done fewer than three times.
-- The next step depends on what the last one found, as in debugging or research.
-- A judgement needs many items at once.
+- The next step depends on what the last one found, as in debugging or research. Such work might still be compiled around one large judgement, at the price section 3 gives. Nobody has tried.
 - The process changes faster than a team would update what it shares.
 - Building it costs more than it will save. The break-even point is the build cost divided by what one run saves. Paper 1 gives no build cost, so this has not been worked out for the one example that exists.
 
