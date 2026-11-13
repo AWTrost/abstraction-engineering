@@ -8,6 +8,7 @@ This repo holds the papers on that idea and the one class built to test it.
 
 - [Paper 1: classes in the abstract](papers/paper-1-classes-in-the-abstract.md). This paper covers what a class declares and what a team's setup supplies. It explains why the program drives and the model only fills typed functions, and how a class is pinned by version. It rests on one build, scored against long hand-run agent sessions, with the caveats stated.
 - [Paper 2 material](papers/paper-2-material.md). These are notes toward the second paper, on classes in action: memory, promotion, and the evidence from running a class. It is not a finished text.
+- [Paper 3 draft: the principle apart from the build](papers/paper-3-the-principle.md). A thought experiment: the idea stated with no package, language or class vocabulary. A model drafted it, it reports no new run, and it is not yet edited.
 
 ## The class
 
