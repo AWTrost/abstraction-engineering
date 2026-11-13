@@ -1,6 +1,6 @@
 # Compile what the session found: the principle apart from the build
 
-Nov 12, 2026 · draft, first version · written by a model at Adam's request, as a thought experiment
+Nov 12, 2026, with a section added Nov 13 · draft, first version · written by a model at Adam's request, as a thought experiment
 
 This is a draft of a third paper. Paper 1 describes one way to build a thing, the agent-class, and the paper 2 material holds notes on what running it showed. This paper tries to state the principle underneath with no build in it: no package, no language, and no need for the word "class". If the principle is sound, a team could follow it with different tools.
 
@@ -13,13 +13,13 @@ A model wrote this draft in one session, from paper 1, the paper 2 material and 
 3. The model keeps only the judgements that can be listed.
 4. The contract and its tests are the thing that is shared.
 
-The next four sections take each line in turn. Each says what the line means, what paper 1 shows for it, and what would count against it. The sections after those cover an idea to test, the main objection, what compiling loses, and when it buys little.
+The next four sections take each line in turn. Each says what the line means, what paper 1 shows for it, and what would count against it. The sections after those cover an idea to test, the main objection, what compiling loses, when it buys little, and what rests on what.
 
-Lines 2 and 4 buy different things, and a team can have one without the other. Line 2 buys speed, low cost and the same steps every time. Line 4 buys something to test and something to hand over. This matters later, for work whose steps cannot be written down.
+Lines 2 and 4 buy different things, and a team can have one without the other. Line 2 buys low cost and the same steps every time. Line 4 buys something to test and something to hand over. This matters later, for work whose steps cannot be written down.
 
 ## Words used here
 
-The paper needs only these words. Where it points at paper 1, it uses paper 1's terms as paper 1 defines them.
+The paper needs these words, plus a few of paper 1's: class, setup, binding and pin, used as paper 1 defines them.
 
 - **Session.** One long piece of work between a person and an agent, where the agent decides the next step as it goes.
 - **Process.** The steps a piece of work takes, in order, with what each step needs and produces.
@@ -90,7 +90,7 @@ A team can share four things from a piece of agent work: the transcript, the pro
 - Code is tied to one language and one set of tools.
 - A contract says what the process needs and returns, and its tests say whether a given way of running it is good enough.
 
-The tests have to check meaning, and there are two kinds. For each judgement, a set of cases with known answers, large enough to put a bound on the costly error. For each thing the process needs from outside, a past case with a known result, run through the real source. Paper 1's review found that the built example has the first kind and not the second, and that a wrong source passed every test.
+The tests have to check meaning, and there are two kinds. For each judgement, a set of cases with known answers, large enough to put a bound on the costly error. For each thing the process needs from outside, a past case with a known result, run through the real binding. Paper 1's review found that the built example has the first kind and not the second, and that a binding which gave a wrong answer in the right shape passed every test.
 
 If the contract and tests are what is shared, then what runs behind them is free to change. It can be code in another language. It can be a different model. It can even be an agent loop for the whole process, if the loop passes. That last choice gives up line 2 and keeps line 4, as section 3 says of a very large judgement.
 
@@ -113,11 +113,11 @@ In this form:
 
 **Why it might be worth it.** Code is cheap to write now, so tying a class to one language may cost more than it saves. A team could take up a class without adding a language to its repo.
 
-**Why it might not be.** Each implementation is one more thing to keep up, and every contract change has to reach all of them. The idea is only as safe as the tests. Paper 1's review found a source that passed every test and was wrong. Tests can fix the result of the exact steps closely, with known cases. For a judgement they can only bound how often the costly wrong answer comes back. So for the judgements, "the same output" means "within the bound".
+**Why it might not be.** Each implementation is one more thing to keep up, and every contract change has to reach all of them. The idea is only as safe as the tests. Paper 1's review found a binding that gave a wrong answer in the right shape and passed every test. Tests can fix the result of the exact steps closely, with known cases. For a judgement they can only bound how often the costly wrong answer comes back. So for the judgements, "the same output" means "within the bound".
 
 **How the tests would be checked.** Tests catch what someone thought to test. To catch the rest, run each new implementation and the reference on the same real past inputs, and compare the results. A difference means the tests missed something.
 
-**What would test the idea.** Generate a second implementation from the contract file alone, in another language, with no sight of the reference. Run both on a past piece of work and count the differences, and how many of them the tests missed. This is test 2 under "What rests on what", with a reference added. Paper 1's one case of two implementations does not count, because the second was a translation of the first.
+**What would test the idea.** Generate a second implementation from the contract file alone, in another language, with no sight of the reference. Run both on a past piece of work and count the differences, and how many of them the tests missed. This is test 2 under "What rests on what". Paper 1's one case of two implementations does not count, because the second was a translation of the first.
 
 ## Why not a session every time?
 
@@ -130,12 +130,12 @@ A larger model does not settle that, because it helps both sides. It makes the s
 What a session every time does not give, at any model size, is this:
 
 - **The same process twice.** Two sessions on the same work may take different steps and check different things. Nobody knows which, short of reading both transcripts.
-- **Something to test.** A session has no contract. The only check on it is a person reading its result, each time. A compiled process fits the checks a team already runs on code. It has an exit status. Its exact steps have tests that need no model and can run on every change. Its judgements have a scored set of cases that can run when the prompt or the model changes, and fail the build below a bar. The built example has the exit status and the model-free tests, by its README, and this repo runs those tests on every pull request. Scoring the judgement in a pipeline is not built. For a team that already trusts a pipeline more than a transcript, this may be the plainest reason to compile.
+- **Something to test.** A session has no contract. The only check on it is a person reading its result, each time. A compiled process fits the checks a team already runs on code. It has an exit status. Its exact steps have tests that need no model and can run on every change. Its judgements have a scored set of cases that can run when the prompt or the model changes, and fail the build below a bar. The built example has the exit status and the model-free tests, by its README, and this repo runs those tests on every pull request. The command that scores the judgement and fails below a bar is built, but no pipeline runs it. For a team that already trusts a pipeline more than a transcript, this may be the plainest reason to compile.
 - **Something to hand over.** A teammate gets either your result or a session of their own, which may not do what yours did.
 - **A run with nobody there.** A session needs a person to start it and to answer it. A compiled process can run on a schedule.
 - **A lower cost.** This is the weakest of the five. The paper 2 material already says that while tokens are cheap, people spend them to save their own time.
 
-None of the five is measured. The first is the one an experiment can most directly decide. Take one piece of repeated work. Run several fresh sessions on it with a large model. Compare what they find with each other, with a known answer, and with the compiled process. If the sessions agree with each other and miss nothing the compiled process finds, the first reason falls for that work. The case for compiling it would then rest on the other four. Paper 1 cannot answer this. Its two sessions were on two different releases, so it has no measure of how far two sessions on the same work agree.
+None of the five is measured, apart from the one-release cost direction in section 2. The first is the one an experiment can most directly decide. Take one piece of repeated work. Run several fresh sessions on it with a large model. Compare what they find with each other, with a known answer, and with the compiled process. If the sessions agree with each other and miss nothing the compiled process finds, the first reason falls for that work. The case for compiling it would then rest on the other four. Paper 1 cannot answer this. Its two sessions were on two different releases, so it has no measure of how far two sessions on the same work agree.
 
 Until that is run, the honest position is that the objection is open.
 
