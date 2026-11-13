@@ -4,7 +4,7 @@ The papers on abstraction engineering (designing the shared, versioned process t
 
 ## Map
 
-- `papers/paper-1-classes-in-the-abstract.md`: paper 1, classes in the abstract. It is a finished, versioned text: the date and version are on line 3, and "the first version" in the text means the Nov 8 original and "the second version" the Nov 9 text.
+- `papers/paper-1-classes-in-the-abstract.md`: paper 1, classes in the abstract. It is a finished, versioned text: the author and version are on line 3, git keeps the dates, and "the first version" in the text means the Nov 8 original and "the second version" the Nov 9 text.
 - `papers/paper-2-material.md`: notes toward paper 2, classes in action. They are not a finished text. Each item is an observation from a run, except the section "Where the model sits", which holds ideas, each with what would test it.
 - `papers/paper-3-the-principle.md`: a draft of paper 3, the principle with no build in it. The owner has reviewed it, and it has had cold reads. It reports no run, and its figures all come from paper 1; keep it that way.
 - `agent-classes/`: the agent-classes, one folder each; its `README.md` lists them.
