@@ -4,7 +4,7 @@ Nov 12, 2026 · draft, first version · written by a model at Adam's request, as
 
 This is a draft of a third paper. Paper 1 describes one way to build a thing, the agent-class, and the paper 2 material holds notes on what running it showed. This paper tries to state the principle underneath with no build in it: no package, no language, and no need for the word "class". If the principle is sound, a team could follow it with different tools.
 
-A model wrote this draft in one session, from paper 1, the paper 2 material and a review of paper 1. It reports no new run. Every figure in it comes from paper 1. Adam reviewed it and directed its changes. It is still a draft.
+A model wrote this draft in one session, from paper 1, the paper 2 material and a review of paper 1. It reports no new run. Every figure in it comes from paper 1. Adam reviewed it and directed its changes. A later session added the section "An idea to test: compile the steps into the contract". It is still a draft.
 
 ## The principle
 
@@ -13,7 +13,7 @@ A model wrote this draft in one session, from paper 1, the paper 2 material and 
 3. The model keeps only the judgements that can be listed.
 4. The contract and its tests are the thing that is shared.
 
-The next four sections take each line in turn. Each says what the line means, what paper 1 shows for it, and what would count against it. The sections after those cover the main objection, what compiling loses, and when it buys little.
+The next four sections take each line in turn. Each says what the line means, what paper 1 shows for it, and what would count against it. The sections after those cover an idea to test, the main objection, what compiling loses, and when it buys little.
 
 Lines 2 and 4 buy different things, and a team can have one without the other. Line 2 buys speed, low cost and the same steps every time. Line 4 buys something to test and something to hand over. This matters later, for work whose steps cannot be written down.
 
@@ -27,6 +27,7 @@ The paper needs only these words. Where it points at paper 1, it uses paper 1's 
 - **Judgement.** A question that code written in advance cannot answer. It has a declared input, a fixed shape of answer that includes "not enough to judge", and a known costly wrong answer. Section 3 has the detail. Paper 1 builds a judgement as a fuzzy function.
 - **Compile.** To turn a process that a session found into a program that runs it with no session. The word is borrowed. Nothing here is a compiler.
 - **Contract.** What the compiled process needs, what it returns, and what each judgement may answer.
+- **Implementation.** Code that runs a contract. **Reference implementation:** the one implementation kept with the contract, which others are compared against.
 - **Fall back.** To stop the compiled process and hand the work to a person or a session, saying why.
 
 ## 1. A session discovers a process
@@ -96,6 +97,27 @@ If the contract and tests are what is shared, then what runs behind them is free
 This matters for one argument against the whole idea: that models will get good enough to make compiling pointless. Under this line, a better model changes what fills the contract. It does not remove the need for one, because the team still needs to know what the work returns and whether it can be trusted.
 
 **What paper 1 shows, and what would count against it.** Two ways of running one contract that both pass its tests and give different results on real work would count against this line. That would mean the tests do not hold the meaning. Paper 1 has one case of the same report from two implementations. The second was a translation of the first, so it is weak evidence.
+
+## An idea to test: compile the steps into the contract
+
+This section is an idea, not part of the principle. It came out of a later model session and Adam's discussion of it. Adam has not settled on it, and no run tests it.
+
+Line 2 compiles the exact steps into code, and line 4 shares the contract around that code. The idea moves the compiled form up one level. The steps are compiled into the contract, its tests and the shape of the setup. Code becomes one way to run the contract, not the thing that is shared.
+
+In this form:
+
+- **The class's home keeps** the contract, the tests, the shape of the setup, and one reference implementation in one language.
+- **A team whose repo uses another language** may write or generate its own implementation and keep it in its own repo. It counts as the class if it passes the tests at the pinned contract version.
+- **A team's own facts**, such as its ticket fields and status names, go in its setup file, which the contract declares and checks. They do not go into the implementation's code. Then a team can regenerate its implementation when the contract changes without losing them.
+- **The pin names** the contract version, the model id and the tool version. The code is not pinned. It has to pass again whenever it changes.
+
+**Why it might be worth it.** Code is cheap to write now, so tying a class to one language may cost more than it saves. A team could take up a class without adding a language to its repo.
+
+**Why it might not be.** Each implementation is one more thing to keep up, and every contract change has to reach all of them. The idea is only as safe as the tests. Paper 1's review found a source that passed every test and was wrong. Tests can fix the result of the exact steps closely, with known cases. For a judgement they can only bound how often the costly wrong answer comes back. So for the judgements, "the same output" means "within the bound".
+
+**How the tests would be checked.** Tests catch what someone thought to test. To catch the rest, run each new implementation and the reference on the same real past inputs, and compare the results. A difference means the tests missed something.
+
+**What would test the idea.** Generate a second implementation from the contract file alone, in another language, with no sight of the reference. Run both on a past piece of work and count the differences, and how many of them the tests missed. This is test 2 under "What rests on what", with a reference added. Paper 1's one case of two implementations does not count, because the second was a translation of the first.
 
 ## Why not a session every time?
 
