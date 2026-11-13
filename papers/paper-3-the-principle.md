@@ -1,10 +1,8 @@
 # Compile what the session found: the principle apart from the build
 
-Nov 12, 2026, with additions on Nov 13 · draft, first version · written by a model at Adam's request, as a thought experiment
-
 This is a draft of a third paper. Paper 1 describes one way to build a thing, the agent-class, and the paper 2 material holds notes on what running it showed. This paper tries to state the principle underneath with no build in it: no package, no language, and no need for the word "class". If the principle is sound, a team could follow it with different tools.
 
-A model wrote this draft in one session, from paper 1, the paper 2 material and a review of paper 1. It reports no new run. Every figure in it comes from paper 1. Adam reviewed it and directed its changes. On Nov 13 a later session added the section "An idea to test: compile the steps into the contract", brought in paper 1's new build cost, and fixed what two cold reads found. Adam has not settled on the added idea. It is still a draft.
+A model wrote this draft at Adam's request, as a thought experiment, in one session, from paper 1, the paper 2 material and a review of paper 1. It reports no new run. Every figure in it comes from paper 1. Adam reviewed it and directed its changes. A later session added the section "An idea to test: compile the steps into the contract", brought in paper 1's new build cost, and fixed what two cold reads found. Adam has not settled on the added idea. It is still a draft.
 
 ## The principle
 
