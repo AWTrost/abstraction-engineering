@@ -183,7 +183,7 @@ The class is an npm package installed from a git tag. npm resolves the tag, and 
 
 The pin is fixed when the class is set up, and every run uses it until someone re-pins.
 
-**What the pin does not cover.** The review found this. The pin covers the class's code and contract. It does not cover the two parts most likely to change under it. A setup binds the fuzzy function to a model name, and the example setup in this repo uses a short alias. A vendor can point an alias at a newer model. Every verdict could then change with no new class version and no re-pin. The coding agent's command-line tool, which makes the call, is not pinned either, and the stripped call depends on how its flags behave. So "a class change never silently reinterprets an old setup" is true, and a model change still can. A setup should name a dated model id, and each report should record the exact model and tool version that produced it. Neither is built.
+**What the pin does not cover.** The review found this. The pin covers the class's code and contract. It does not cover the two parts most likely to change under it. A setup binds the fuzzy function to a model name, and the example setup in this repo uses a short alias. A vendor can point an alias at a newer model. Every verdict could then change with no new class version and no re-pin. The coding agent's command-line tool, which makes the call, is not pinned either, and the stripped call depends on how its flags behave. So "a class change never silently reinterprets an old setup" is true, and a model change still can. A setup should name a full model id, such as `claude-haiku-5-5`, not a short alias such as `haiku`. The id needs no date: Anthropic's "Model IDs and versions" page, read on Nov 13, says every model id is a pinned snapshot, and ids from the 4.6 generation on carry no date. The same page says serving changes can still shift behaviour a little under one id, so each report should also record the exact model and tool version. Neither is built.
 
 One detail cost time. npm cannot install a package from a subfolder of a git repo. It ignores the syntax for a subfolder and installs the repo root, with no error. So each release is a tag on a split commit that holds only the class's folder.
 
@@ -322,7 +322,7 @@ The review added three limits to these scores.
 
 - **One user, one class, one team's setup.** Sharing across people and teams is untested. A second team's setup with no class edits is the next test.
 - **One coding agent, one vendor.** The class ran from Claude Code and a shell. The two models scored are from the same vendor.
-- **A pinned model**, by a dated model id, and a report that records the model and tool version, are not built.
+- **A pinned model**, by a full model id and not an alias, and a report that records the model and tool version, are not built.
 - **A test of meaning for capabilities**, a past release with a known answer, is not built.
 - **No live score for the fuzzy function.** No person has scored its verdicts on a real release.
 - **No build cost.** This paper gives the cost of a run and not the cost of building the class. Without it there is no break-even point: the build cost divided by what one run saves.
