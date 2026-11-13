@@ -13,7 +13,7 @@ A model wrote this draft in one session, from papers 1 and 2 and a review of the
 3. The model keeps only the judgements that can be listed.
 4. The contract and its tests are the thing that is shared.
 
-The rest of this paper takes each line in turn. For each, it says what the line means, why it should hold, and what would show it to be wrong.
+The rest of this paper takes each line in turn. For each, it says what the line means, why it should hold, and what would count against it.
 
 ## Words used here
 
@@ -35,7 +35,7 @@ A session produces two things. One is the work itself: the review, the fix, the 
 
 The second product is usually thrown away. It stays in a transcript that nobody reads again. The next person starts a new session and pays to find the same process a second time.
 
-**What would show this wrong.** If the steps of a piece of work can be listed before anyone has done it, then no session is needed to find them, and this line adds nothing. The test is to take the next compiled process and ask which of its steps could have been named in advance. Paper 2's material lists that test. It has not been run.
+**What would count against it.** If the steps of a piece of work can be listed before anyone has done it, then no session is needed to find them, and this line adds nothing. The test is to take the next compiled process and ask which of its steps could have been named in advance. Paper 2's material lists that test. It has not been run.
 
 ## 2. The exact steps are compiled into code
 
@@ -47,7 +47,7 @@ Those runtimes have one more habit worth copying. When compiled code meets a cas
 
 **What paper 1 shows.** In the one built example, the code was most of the work and the cost followed the number of items, not the number of turns. On one release, a session made 19 model calls and read 1.34 million tokens to reach the same step, against 8 calls and $0.14. Paper 1 calls this a direction and not a ratio, because the two sides were not measured in the same unit, and it is one release.
 
-**What would show this wrong.** A piece of repeated work where, after several sessions, the exact steps still cannot be written down. That work should stay a session. No such case has been tried.
+**What would count against it.** A piece of repeated work where, after several sessions, the exact steps still cannot be written down. That work should stay a session. No such case has been tried.
 
 ## 3. The model keeps only the judgements that can be listed
 
@@ -64,7 +64,7 @@ The limit is plain. Some work needs a judgement about many items at once, or a j
 
 **What paper 1 shows.** One judgement, "does this change do what its ticket asked?", was enough for the built example. It scored 16 of 16 on a small set of cases. The review of paper 1 worked out that 16 of 16 still allows a true accuracy as low as about 83%, and that the judgement has no score on live data. So this line has the least evidence of the four.
 
-**What would show this wrong.** A compiled process whose judgements keep growing in number or in the context they need, until each one is a small session. That would mean the work was not ready to compile.
+**What would count against it.** A compiled process whose judgements keep growing in number or in the context they need, until each one is a small session. That would mean the work was not ready to compile.
 
 ## 4. The contract and its tests are the thing that is shared
 
@@ -79,7 +79,7 @@ The tests have to check meaning, and there are two kinds. For each judgement, a 
 
 If the contract and tests are what is shared, then what runs behind them is free to change. It can be code in another language. It can be a different model. It can be an agent loop, if the loop passes. This matters for one argument against the whole idea: that models will get good enough to make compiling pointless. Under this line, a better model changes what fills the contract. It does not remove the need for one, because the team still needs to know what the work returns and whether it can be trusted.
 
-**What would show this wrong.** Two ways of running one contract that both pass its tests and give different results on real work. That would mean the tests do not hold the meaning. Paper 1 has one case of the same report from two implementations, but the second was a translation of the first, so it is weak evidence.
+**What would count against it.** Two ways of running one contract that both pass its tests and give different results on real work. That would mean the tests do not hold the meaning. Paper 1 has one case of the same report from two implementations, but the second was a translation of the first, so it is weak evidence.
 
 ## Why not a session every time?
 
