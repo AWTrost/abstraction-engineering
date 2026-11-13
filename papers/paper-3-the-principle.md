@@ -81,6 +81,26 @@ If the contract and tests are what is shared, then what runs behind them is free
 
 **What would show this wrong.** Two ways of running one contract that both pass its tests and give different results on real work. That would mean the tests do not hold the meaning. Paper 1 has one case of the same report from two implementations, but the second was a translation of the first, so it is weak evidence.
 
+## Why not a session every time?
+
+This is the objection that decides whether the principle should exist. "Why compile anything? I can start a fresh session with a large model each time and let it work the whole thing out."
+
+Part of the objection is right, and the principle agrees with it. The first times a piece of work is done, a session is the right tool. For work that is rare, low in stakes or still changing, it stays the right tool. A session is line 1 of the principle. The two only disagree about what happens the fourth time.
+
+A larger model does not settle that, because it helps both sides. It makes the session better. It also makes each judgement better, and it makes compiling cheaper, since the model writes the code.
+
+What a session every time does not give, at any model size, is this:
+
+- **The same process twice.** Two sessions on the same work may take different steps and check different things. Nobody knows which, short of reading both transcripts.
+- **Something to test.** A session has no contract. The only check on it is a person reading its result, each time.
+- **Something to hand over.** A teammate gets either your result or a session of their own, which may not do what yours did.
+- **A run with nobody there.** A session needs a person to start it and to answer it. A compiled process can run on a schedule.
+- **A lower cost.** This is the weakest of the five. Paper 2's material already says that while tokens are cheap, people spend them to save their own time.
+
+None of the five is measured. The first is the one that matters most, and one experiment would decide it. Take one piece of repeated work. Run several fresh sessions on it with a large model. Compare what they find with each other, with a known answer, and with the compiled process. If the sessions agree with each other and miss nothing the compiled process finds, the objection wins for that work, and compiling it was waste. Paper 1 cannot answer this. Its two sessions were on two different releases, so it has no measure of how far two sessions on the same work agree.
+
+Until that is run, the honest position is that the objection is open.
+
 ## What compiling loses
 
 A session notices things outside the process. A compiled process finds only what it was built to find. In paper 1, the compiled process reported 3 of the 7 findings it could in principle report on one release, with 5 false gaps beside them. Paper 1 does not say what the sessions found that it could not report at all.
