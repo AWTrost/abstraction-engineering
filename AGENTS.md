@@ -4,7 +4,7 @@ The papers on abstraction engineering (designing the shared, versioned process t
 
 ## Map
 
-- `papers/paper-1-classes-in-the-abstract.md`: paper 1, classes in the abstract. It is a finished, versioned text: the date and version are on line 3, and "the first version" in the text means the Nov 8 original.
+- `papers/paper-1-classes-in-the-abstract.md`: paper 1, classes in the abstract. It is a finished, versioned text: the date and version are on line 3, and "the first version" in the text means the Nov 8 original and "the second version" the Nov 9 text.
 - `papers/paper-2-material.md`: notes toward paper 2, classes in action. They are not a finished text. Each item is an observation from a run, except the section "Where the model sits", which holds ideas, each with what would test it.
 - `agent-classes/`: the agent-classes, one folder each; its `README.md` lists them.
 - `agent-classes/release-review/`: the release-review agent-class as an npm package. This is a showcase copy. The class is developed and released from a private repo, and each version is ported here once it is released there, with no work content. Don't develop the class here first. Its `README.md` has the contract, commands and known limits; `class.json` is the contract in JSON Schema. A new agent-class goes in its own folder under `agent-classes/`.
@@ -21,7 +21,7 @@ The papers on abstraction engineering (designing the shared, versioned process t
 
 - **No work content, ever.** The evidence comes from one team's real releases. Never add a ticket key, project, team, person, host, repo or path from that setup, in the papers, in commit messages or in PR text. The class's fixtures use `DEMO-*` keys only. Before every push, read the diff for such names.
 - **Every figure traces to a source.** A count, cost or score must come from a report, a transcript or a test run, not from an estimate. If a figure is worked out, not recorded, say how, as paper 1 does for the class's 8 calls. Estimates written as fact are the error reviewers found most often.
-- **Keep the hedges.** The evidence is one class, one team's setup, one runtime. Do not drop a caveat to make a claim read stronger. A claim the evidence weakens goes under "It weakens or qualifies" in paper 1, not out of the paper.
+- **Keep the hedges.** The evidence is one class, one team's setup, one coding agent. Do not drop a caveat to make a claim read stronger. A claim the evidence weakens goes under "It weakens or qualifies" in paper 1, not out of the paper.
 - **Plain words.** Short sentences, no hype, terms from paper 1's "Words used here" used the way it defines them. Define a new term there before using it.
 - **Paper 2 material is observations.** Add a new item to the section it fits. An idea not yet seen in a run goes under "Where the model sits" with what would test it. Do not repeat what paper 1's "For paper 2" list already says.
 - **Cold-read before merging a paper change.** Changes to paper 1 get a cold read by a reviewer with no context of the edit, and its must-fix items are fixed before merge.
