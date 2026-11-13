@@ -153,7 +153,7 @@ Two things follow. Both are ideas, with no run behind them.
 - **The work has been done fewer than three times.** Stay with a session.
 - **The next step depends on what the last one found**, as in debugging or research. There are no exact steps to compile, so line 2 buys nothing. Line 4 may still be worth having, as one large judgement with a contract around it. Nobody has tried.
 - **The process changes faster than a team would update what it shares.**
-- **Building it costs more than it will save.** The break-even point is the build cost divided by what one run saves. For the one example that exists, paper 1 works it out as seven runs at the earliest: about $64 of build work after the first session, against at most $10.12 saved a run on one release. That rests on one class and one release, and the build cost leaves out Adam's own time.
+- **Building it costs more than it will save.** The break-even point is the build cost divided by what one run saves. For the one example that exists, paper 1 works it out as seven runs at the earliest: about $64 of build work after the first hand-run sessions, against at most $10.12 saved a run on one release. That rests on one class and one release, and the build cost leaves out Adam's own time.
 
 ## What rests on what
 
