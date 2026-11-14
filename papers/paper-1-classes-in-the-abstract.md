@@ -1,6 +1,6 @@
 # Abstraction engineering: classes for agent work
 
-Nov 12, 2026, with corrections on Nov 13 · Adam · third version
+Adam · third version
 
 The first of two papers. This one is about classes in the abstract: the shared process that agent work comes from. The second, classes in action, covers how a class learns: memory, promotion, and the evidence for them. A draft of a third, on the principle with no build in it, is in the same folder.
 
