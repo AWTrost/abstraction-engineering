@@ -12,7 +12,7 @@ This repo holds the papers on that idea and the one class built to test it.
 
 ## The class
 
-[`agent-classes/release-review/`](agent-classes/release-review/) is a concept: an agent-class written as an npm package, here to show the code. It compares a release's planned tickets with the changes that shipped, and writes a gap report for a person to sign off. Everything exact is code. One judgement, whether a ticket's changes do what it asked, is a typed function that setup binds to a model or a command. Nothing is published or deployed from this repo. The class is developed and released in a private repo, and each released version is copied here.
+[`agent-classes/release-review/`](agent-classes/release-review/) is a concept: an agent-class written as an npm package, here to show the code. It compares a release's planned tickets with the changes that shipped, and writes a gap report for a person to sign off. Everything exact is code. One judgement, whether a ticket's changes do what it asked, is a typed function that setup binds to a model or a command. Nothing is published or deployed from this repo. The class is developed in a private repo. Version 0.3.0 was copied here once as an example, and it is not kept up to date with that repo.
 
     cd agent-classes/release-review && npm ci && npm run check
 
