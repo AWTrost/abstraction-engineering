@@ -7,7 +7,7 @@
     "tickets": {"cmd": ["node", "bindings/tickets.js", "keys"]},
     "release_changes": {"cmd": ["node", "bindings/changes.js", "{release}"]},
     "change_diffs": {"cmd": ["node", "bindings/changes.js", "diffs"]},
-    "change_matches_ticket": {"model": "haiku"}
+    "change_matches_ticket": {"model": "claude-opus-5-5"}
   },
   "status_map": {
     "To Do": "todo",
