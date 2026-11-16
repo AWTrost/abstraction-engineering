@@ -8,7 +8,7 @@ The papers on abstraction engineering (designing the shared, versioned process t
 - `papers/paper-2-material.md`: notes toward paper 2, classes in action. They are not a finished text. Each item is an observation from a run, except the section "Where the model sits", which holds ideas, each with what would test it.
 - `papers/paper-3-the-principle.md`: a draft of paper 3, the principle with no build in it. The owner has reviewed it, and it has had cold reads. It reports no run, and its figures all come from paper 1; keep it that way.
 - `agent-classes/`: the agent-classes, one folder each; its `README.md` lists them.
-- `agent-classes/release-review/`: the release-review agent-class as an npm package. This is an example: one released version (0.3.0) of a class that is developed in a private repo, copied here once with no work content. It is not kept in step with that repo, so don't port later versions here or develop the class here. Its `README.md` has the contract, commands and known limits; `class.json` is the contract in JSON Schema. A new agent-class goes in its own folder under `agent-classes/`.
+- `agent-classes/release-review/`: the release-review agent-class as an npm package. This is an example: one released version (0.3.0) of a class that is developed in a private repo, copied here once with no work content. It is not kept in step with that repo, so don't port later versions here or develop the class here. Small fixes that make it match the papers are made here. Its `README.md` has the contract, commands and known limits; `class.json` is the contract in JSON Schema. A new agent-class goes in its own folder under `agent-classes/`.
 - `README.md`: what a visitor reads first.
 - `.github/workflows/ci.yml`: on every PR, runs the class tests and fails on a home path anywhere in the repo.
 
@@ -30,7 +30,7 @@ The papers on abstraction engineering (designing the shared, versioned process t
 
 ## Rules for the class
 
-- This copy is a fixed example and may drift from the private home repo. Fix it here only where the example itself is wrong or out of date, such as its example setup; a new class feature belongs in the home repo.
+- This copy is a fixed example and may drift from the private home repo. Fix it here only where it contradicts the papers, such as an example setup that named a model alias. A new class feature belongs in the home repo.
 - Nothing is released or tagged from this repo; it shows the code. Teams install a class from its private home repo at a pinned version, so a change reaches a team only when they re-pin, and a change to what a setup or binding may contain is a new version.
 - Keep `version` in `package.json` and `class.json` equal; a change to what a setup or binding may contain is a new version.
 
